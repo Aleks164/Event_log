@@ -4,12 +4,13 @@ import { Provider } from "react-redux";
 import { AppRouter } from "./AppRoutes";
 import { store } from "./store";
 import { PaginationField } from "./components/Table/PaginationField";
+import { EventLog } from "./components/EventLog";
 
 export const App = () => (
   <React.StrictMode>
     {/* <Provider store={store}> */}
     {/* <BrowserRouter> */}
-    <PaginationField />
+    <EventLog />
     {/* </BrowserRouter> */}
     {/* </Provider> */}
   </React.StrictMode>

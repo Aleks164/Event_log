@@ -77,8 +77,7 @@
       "prettier --write",
       "eslint --cache --fix --ext .js,.tsx"
     ],
-    "*.{css,md,yml}": "prettier --write",
-    "*.css": "stylelint --fix"
+    "*.{css,md,yml}": "prettier --write"
   },
   "dependencies": {
     "@emotion/react": "^11.9.3",

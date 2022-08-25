@@ -117,24 +117,6 @@ export const defaultData = [
     "installationDate": "2021.04.30 02:17:22"
   },
   {
-    "deviceId": "63064f480aaf2c5dde5d4255",
-    "isActive": true,
-    "price": 2187.59,
-    "quantity": 4,
-    "deviceType": "Type1",
-    "company": "CIPROMOX",
-    "installationDate": "2021.08.04 05:02:03"
-  },
-  {
-    "deviceId": "63064f482091e8a2194b360f",
-    "isActive": true,
-    "price": 1381.7,
-    "quantity": 26,
-    "deviceType": "Type2",
-    "company": "HAWKSTER",
-    "installationDate": "2020.12.28 01:52:38"
-  },
-  {
     "deviceId": "63064f48c87a2ecaa51255ac",
     "isActive": true,
     "price": 1487.35,

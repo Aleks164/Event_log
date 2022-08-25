@@ -2,15 +2,21 @@
   border-radius: 6px;
   background: #fff;
   overflow: hidden;
+  margin-top: 10px;
+  margin-bottom: 5px;
 }
 
 table {
   width: 100%;
-  overflow: auto;
+  overflow-x: hidden;
   display: grid;
-  grid-template-columns:
-    minmax(150px, 3fr) minmax(150px, 1fr) minmax(150px, 1fr)
-    minmax(150px, 1fr) minmax(150px, 1fr) minmax(150px, 1fr) minmax(150px, 1fr);
+  grid-template-columns: minmax(150px, 1fr) minmax(150px, 1fr) minmax(
+      150px,
+      1fr
+    ) minmax(150px, 1fr) minmax(150px, 1fr) minmax(150px, 1fr) minmax(
+      150px,
+      1fr
+    );
 }
 
 table thead,
@@ -39,6 +45,10 @@ table tbody td {
   display: block;
   user-select: none;
 }
+
+/* table th div:first-child {
+  overflow: hidden;
+} */
 
 table tr td {
   border-top: 1px solid #ccc;
@@ -77,6 +87,11 @@ table tr td {
 
 .type4Color {
   background-color: #ffeee4;
+}
+
+.pageNumberInput input {
+  text-align: center;
+  height: 15px;
 }
 
 .choosedLog {
