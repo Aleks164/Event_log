@@ -1,16 +1,19 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
+import { Grid } from "@mui/material";
 import { defaultData } from "../../utils/defaultData";
-import "./tableStyle.css";
-
+import { SortArrow } from "./SortArrow";
+import "./tableStyle.css"; 
+ 
 const createHeaders = (headers: string[]) =>
   headers.map((item) => ({
     text: item,
     ref: useRef(),
   }));
 
-export const Table = ({ minCellWidth = 0 }) => {
+export const Table = ({ minCellWidth = 150 }) => {
   const [tableHeight, setTableHeight] = useState("auto");
-  const [activeIndex, setActiveIndex] = useState(null);
+  const [choosedLog, setChoosedLog] = useState<number|null>(null);
+  const [activeIndex, setActiveIndex] = useState<number|null>(null);
   const tableElement = useRef(null);
   const headers = [
     "Id устройства",
@@ -23,7 +26,7 @@ export const Table = ({ minCellWidth = 0 }) => {
   ];
   const columns = createHeaders(headers);
 
-  const mouseDown = (index) => {
+  const mouseDown = (index:number) => {
     setActiveIndex(index);
   };
 
@@ -60,6 +63,13 @@ export const Table = ({ minCellWidth = 0 }) => {
     setActiveIndex(null);
     removeListeners();
   }, [setActiveIndex, removeListeners]);
+  
+  const calcStringStyle =(deviceType:string,index:number)=>{
+   if(index!==null&&choosedLog===index) return "choosedLog";
+    let resultClass = "type1Color";
+    if(deviceType !=="Type1") resultClass = `${deviceType.toLowerCase()}Color`;
+    return resultClass;    
+  }
 
   useEffect(() => {
     setTableHeight(tableElement?.current?.offsetHeight);
@@ -83,7 +93,17 @@ export const Table = ({ minCellWidth = 0 }) => {
           <tr>
             {columns.map(({ ref, text }, i) => (
               <th ref={ref} key={text}>
-                <span>{text}</span>
+                
+                <Grid
+                container
+  direction="row"
+  justifyContent="center"
+  alignItems="center"
+  sx={{minWidth:"max-content"}}
+  >
+                <span>{text}</span>                
+               <SortArrow />               
+                </Grid>
                 <div
                   style={{ height: tableHeight }}
                   onMouseDown={() => mouseDown(i)}
@@ -96,15 +116,17 @@ export const Table = ({ minCellWidth = 0 }) => {
           </tr>
         </thead>
         <tbody>
-          {defaultData.map((item) => (
-            <tr>
-              <td>{item.deviceId}</td>
-              <td>{item.isActive}</td>
-              <td>{item.price}</td>
-              <td>{item.quantity}</td>
-              <td>{item.deviceType}</td>
-              <td>{item.company}</td>
-              <td>{item.installationDate}</td>
+          {defaultData.map((item,index) => (
+            <tr onClick={()=>{
+              if(choosedLog===index) setChoosedLog(null);
+              else setChoosedLog(index)}} >
+              <td className={calcStringStyle(item.deviceType,index)}>{item.deviceId}</td>
+              <td className={calcStringStyle(item.deviceType,index)}>{item.isActive?"On":"Off"}</td>
+              <td className={calcStringStyle(item.deviceType,index)}>{item.price}</td>
+              <td className={calcStringStyle(item.deviceType,index)}>{item.quantity}</td>
+              <td className={calcStringStyle(item.deviceType,index)}>{item.deviceType}</td>
+              <td className={calcStringStyle(item.deviceType,index)}>{item.company}</td>
+              <td className={calcStringStyle(item.deviceType,index)}>{item.installationDate}</td>
             </tr>
           ))}
         </tbody>

@@ -1,5 +1,4 @@
 .table-wrapper {
-  margin-bottom: 25px;
   border-radius: 6px;
   background: #fff;
   overflow: hidden;
@@ -23,6 +22,7 @@ table tr {
 table th {
   position: relative;
   font-size: 18px;
+  background-color: #c6dbf5;
 }
 
 table th,
@@ -37,6 +37,7 @@ table tbody td {
   text-overflow: ellipsis;
   overflow: hidden;
   display: block;
+  user-select: none;
 }
 
 table tr td {
@@ -51,7 +52,7 @@ table tr td {
   right: 0;
   top: 0;
   z-index: 1;
-  border-right: 2px solid transparent;
+  border-right: 2px solid #00000005;
 }
 
 .resize-handle:hover {
@@ -60,4 +61,25 @@ table tr td {
 
 .resize-handle.active {
   border-color: #517ea5;
+}
+
+.type1Color {
+  background-color: #edebeb;
+}
+
+.type2Color {
+  background-color: #feffd8;
+}
+
+.type3Color {
+  background-color: #e9f5d7;
+}
+
+.type4Color {
+  background-color: #ffeee4;
+}
+
+.choosedLog {
+  box-shadow: inset 0px 0px 100px 0px rgba(67, 69, 226, 0.35),
+    inset 0px -5px 0px -1px #9abfad, inset 0px 5px 1px 0px #e5ac3b;
 }
