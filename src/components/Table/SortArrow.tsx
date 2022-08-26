@@ -1,10 +1,19 @@
 import React, {useState} from "react";
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import {  IconButton, Grid } from "@mui/material";
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import MenuOpenIcon from '@mui/icons-material/MenuOpen';
+import {FilterIconType} from "../../types/types";
 
 export const SortArrow = ()=>{
-    const [sortDirection, setSortDirection] = useState<"down"|"up">("down");
+    const [sortDirection, setSortDirection] = useState<FilterIconType>("down");
+    
+    function curFilterIcon(type:FilterIconType){
+        if(type==="down") return <ArrowDropDownIcon sx={{color:"blue"}} fontSize="large" />
+        if(type==="up") return <ArrowDropUpIcon sx={{color:"red"}} fontSize="large"/>
+        return <MenuOpenIcon fontSize="large"/>
+    }
+    
     return(<Grid item
   container
   direction="column"
@@ -13,14 +22,15 @@ export const SortArrow = ()=>{
   sx={{width: "min-content"}}
 >
     <IconButton
-         onClick={()=>{
-             console.log(sortDirection);
-             setSortDirection(prev=>prev==="down"?"up":"down");
-             }}
+         onClick={()=>{             
+             setSortDirection(prev=>{
+                 if(prev==="down") return "up";
+                 if(prev==="up") return "default";
+                return "down";})
+                }}
          aria-label="upSort"
          size="small">
-         {sortDirection==="up"?<ArrowDropUpIcon sx={{color:"red"}} fontSize="large"/>  
-         :<ArrowDropDownIcon fontSize="large" />}
+         {curFilterIcon(sortDirection)}
          </IconButton> 
          </Grid>
     )

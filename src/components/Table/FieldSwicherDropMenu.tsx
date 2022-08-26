@@ -1,8 +1,12 @@
 import React, { useState } from "react";
 import { Button, Grid, Menu, MenuItem, Typography } from "@mui/material";
 import ListIcon from "@mui/icons-material/List";
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
+import { tableHeaders } from "../../utils/tableHeaders";
 
-export const FieldManager = () => {
+export const FieldSwicherDropMenu = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -57,9 +61,9 @@ export const FieldManager = () => {
           horizontal: "left",
         }}
       >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
-        <MenuItem onClick={handleClose}>My account</MenuItem>
-        <MenuItem onClick={handleClose}>Logout</MenuItem>
+        <FormGroup sx={{p:"5px",pl:"20px",pr:"10px", userSelect:"none"}}>            
+      {tableHeaders.map((header,index)=><FormControlLabel key={index} control={<Switch defaultChecked />} label={header} />  )}
+    </FormGroup>    
       </Menu>
     </Grid>
   );

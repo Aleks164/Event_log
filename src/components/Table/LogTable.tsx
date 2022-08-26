@@ -1,6 +1,8 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
 import { Grid, Paper } from "@mui/material";
+import { useTypedDispatch, useTypedSelector } from "../../hooks/redux";
 import { defaultData } from "../../utils/defaultData";
+import { tableHeaders } from "../../utils/tableHeaders";
 import { SortArrow } from "./SortArrow";
 import "./tableStyle.css";
 
@@ -15,19 +17,19 @@ export const LogTable = () => {
   const [choosedLog, setChoosedLog] = useState<number | null>(null);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const tableElement = useRef(null);
-
-  const minCellWidth = 150;
-
-  const headers = [
-    "Id устройства",
-    "Состояние",
-    "Цена",
-    "Количество",
-    "Тип устройства",
-    "Компания",
-    "Дата установки",
-  ];
-  const columns = createHeaders(headers);
+   const { data } = useTypedSelector(
+    (state) => state.dataManager
+  );  
+  const { currentPage, rowsNumber } = useTypedSelector(
+    (state) => state.eventLogStateManager
+  );    
+  const minCellWidth = 150;  
+  const columns = createHeaders(tableHeaders);
+  
+  const rowNumberCalc = (index:number)=> {
+      console.log("123",currentPage,rowsNumber,index)
+      
+      return String((currentPage-1)*15+index+1)};
 
   const mouseDown = (index: number) => {
     setActiveIndex(index);
@@ -35,9 +37,8 @@ export const LogTable = () => {
 
   const mouseMove = useCallback(
     (e) => {
-      console.log("1");
-      const gridColumns = columns.map((col, i) => {
-        if (i === activeIndex) {
+      const gridColumns = columns.map((col, i) => {         
+        if (i === activeIndex&&i!==0) {
           // Calculate the column width
           const width = e.clientX - col.ref.current.offsetLeft;
 
@@ -108,25 +109,29 @@ export const LogTable = () => {
                   <span>{text}</span>
                   <SortArrow />
                 </Grid>
-                <div
+                {i>0&&<div
                   style={{ height: tableHeight }}
                   onMouseDown={() => mouseDown(i)}
                   className={`resize-handle ${
                     activeIndex === i ? "active" : "idle"
                   }`}
-                />
+                />}
               </th>
             ))}
           </tr>
         </thead>
         <tbody>
-          {defaultData.map((item, index) => (
+          {data.map((item, index) => (
             <tr
+            key={index}
               onClick={() => {
                 if (choosedLog === index) setChoosedLog(null);
                 else setChoosedLog(index);
               }}
             >
+              <td className={calcStringStyle(item.deviceType, index)}>
+                {rowNumberCalc(index)}
+              </td>
               <td className={calcStringStyle(item.deviceType, index)}>
                 {item.deviceId}
               </td>
