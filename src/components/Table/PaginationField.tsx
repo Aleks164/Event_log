@@ -4,13 +4,22 @@ import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
+import { useTypedDispatch, useTypedSelector } from "../../hooks/redux";
+import { setCurrentPage } from "../../store/reducers/eventLogStateManager";
+import { setNewPageDataAction } from "../../store/actions/setNewPageDataAction";
 
 export const PaginationField = () => {
-  const [pageNumber, setPageNumber] = useState<number>(1);
+  const dispatch = useTypedDispatch();
+  const { currentPage, rowsNumber } = useTypedSelector(
+    (state) => state.eventLogStateManager
+  );
+  const [pageNumber, setPageNumber] = useState<number>(currentPage);
 
-  function setPageWithBebouncer(newPagenumber: number) {
+  function setPageWithDebouncer(newPagenumber: number) {
     const timeOutId = setTimeout(() => {
       setPageNumber(newPagenumber);
+      dispatch(setCurrentPage(newPagenumber));
+      dispatch(setNewPageDataAction(newPagenumber,15));      
     }, 300);
     return () => {
       clearTimeout(timeOutId);
@@ -20,8 +29,10 @@ export const PaginationField = () => {
   function nextPageHandler(nextPage: string) {
     let newNumber = parseInt(nextPage, 10) + pageNumber;
     if (newNumber > 100) newNumber = 100;
-    if (newNumber < 1) newNumber = 1;
-    setPageNumber(newNumber);
+    if (newNumber < 1) newNumber = 1;    
+     setPageNumber(newNumber);
+      dispatch(setCurrentPage(newNumber));
+      dispatch(setNewPageDataAction(newNumber,15));
   }
   return (
     <Grid
@@ -38,7 +49,7 @@ export const PaginationField = () => {
     >
       <IconButton
         onClick={() => {
-          setPageWithBebouncer(1);
+          setPageWithDebouncer(1);
         }}
         disabled={pageNumber === 1}
         aria-label="toTheStart"
@@ -60,8 +71,7 @@ export const PaginationField = () => {
 
       <TextField
         inputProps={{
-          inputMode: "numeric",
-          pattern: "[0-9]{1}",
+          inputMode: "numeric",         
           min: 1,
           max: 100,
         }}
@@ -90,7 +100,7 @@ export const PaginationField = () => {
       <IconButton
         disabled={pageNumber === 100}
         onClick={() => {
-          setPageWithBebouncer(100);
+          setPageWithDebouncer(100);
         }}
         aria-label="toTheFinish"
         size="large"

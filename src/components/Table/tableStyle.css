@@ -8,15 +8,11 @@
 
 table {
   width: 100%;
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
   display: grid;
-  grid-template-columns: minmax(150px, 1fr) minmax(150px, 1fr) minmax(
-      150px,
-      1fr
-    ) minmax(150px, 1fr) minmax(150px, 1fr) minmax(150px, 1fr) minmax(
-      150px,
-      1fr
-    );
+  grid-template-columns:
+    75px minmax(150px, 1fr) minmax(150px, 1fr) minmax(150px, 1fr)
+    minmax(150px, 1fr) minmax(150px, 1fr) minmax(150px, 1fr) minmax(150px, 1fr);
 }
 
 table thead,

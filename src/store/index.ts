@@ -1,12 +1,12 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import authManager from "./reducers/authManager";
-import contactsListManager from "./reducers/contactsListManager";
-import filterManager from "./reducers/filterManager";
+import dataManager from "./reducers/dataManager";
+import eventLogStateManager from "./reducers/eventLogStateManager";
+import sortManager from "./reducers/sortManager";
 
 const userReucer = combineReducers({
-  authManager,
-  contactsListManager,
-  filterManager,
+  dataManager,
+  eventLogStateManager,
+  sortManager,
 });
 
 export const store = configureStore({

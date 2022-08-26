@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "SPA application on React to view the event log",
   "main": "index.tsx",
+  "types": "./index.d.ts",
   "scripts": {
     "build": "webpack build --node-env production",
     "dev": "webpack serve --open --node-env development",

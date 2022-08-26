@@ -2,7 +2,7 @@ import React from "react";
 import { Grid, Paper, Typography } from "@mui/material";
 import { PaginationField } from "./Table/PaginationField";
 import { LogTable } from "./Table/LogTable";
-import { FieldManager } from "./Table/FieldManager";
+import { FieldSwicherDropMenu } from "./Table/FieldSwicherDropMenu";
 
 export const EventLog = () => (
   <Paper
@@ -15,7 +15,7 @@ export const EventLog = () => (
       justifyContent="center"
       alignItems="center"
     >
-      <FieldManager />
+      <FieldSwicherDropMenu />
       <LogTable />
       <PaginationField />
     </Grid>

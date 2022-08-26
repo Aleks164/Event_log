@@ -8,10 +8,10 @@ import { EventLog } from "./components/EventLog";
 
 export const App = () => (
   <React.StrictMode>
-    {/* <Provider store={store}> */}
+    <Provider store={store}>
     {/* <BrowserRouter> */}
     <EventLog />
     {/* </BrowserRouter> */}
-    {/* </Provider> */}
+    </Provider>
   </React.StrictMode>
 );
