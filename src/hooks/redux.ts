@@ -4,3 +4,5 @@ import { AppDispatch, UserManagerType } from "../store";
 export const useTypedDispatch = () => useDispatch<AppDispatch>();
 export const useTypedSelector: TypedUseSelectorHook<UserManagerType> =
   useSelector;
+
+export type DispatchType = ReturnType<typeof useTypedDispatch>;

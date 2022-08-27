@@ -9,7 +9,7 @@ import { CircularProgress, Grid, Paper } from "@mui/material";
 import { useTypedDispatch, useTypedSelector } from "../../hooks/redux";
 import { defaultData } from "../../utils/defaultData";
 import { tableHeaders } from "../../utils/tableHeaders";
-import { SortArrow } from "./SortArrow";
+import { SortArrow } from "./SortArrow/SortArrow";
 import { setIsLoading } from "../../store/reducers/eventLogStateManager";
 import { setData } from "../../store/reducers/dataManager";
 import { setNewPageDataAction } from "../../store/actions/setNewPageDataAction";

@@ -2,7 +2,7 @@ import React, { useLayoutEffect } from "react";
 import { Grid, Paper, Typography } from "@mui/material";
 import { PaginationField } from "./Table/PaginationField";
 import { LogTable } from "./Table/LogTable";
-import { FieldSwicherDropMenu } from "./Table/FieldSwicherDropMenu";
+import { FieldSwicherDropMenu } from "./Table/FieldSwicherDropMenu/FieldSwicherDropMenu";
 import { useTypedDispatch, useTypedSelector } from "../hooks/redux";
 import { TableCustomSpiner } from "./Table/TableCustomSpiner";
 import { setNewPageDataAction } from "../store/actions/setNewPageDataAction";

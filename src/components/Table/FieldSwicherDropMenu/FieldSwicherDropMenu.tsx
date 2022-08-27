@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { Button, Grid, Menu, MenuItem, Typography } from "@mui/material";
+import { Button, Grid, Menu, Typography } from "@mui/material";
 import ListIcon from "@mui/icons-material/List";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
-import { tableHeaders } from "../../utils/tableHeaders";
-import { useTypedDispatch, useTypedSelector } from "../../hooks/redux";
-import { setTableHeadersList } from "../../store/reducers/eventLogStateManager";
+import { tableHeaders } from "../../../utils/tableHeaders";
+import { useTypedDispatch, useTypedSelector } from "../../../hooks/redux";
+import { visionSwitcher } from "./visionSwitcher";
 
 export const FieldSwicherDropMenu = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -14,25 +14,14 @@ export const FieldSwicherDropMenu = () => {
   const { tableHeadersList } = useTypedSelector(
     (state) => state.eventLogStateManager
   );
-  const fullHederList = {
-    "№ п.п.": { isVisible: true, filterType: "default" },
-    "Id устройства": { isVisible: true, filterType: "default" },
-    Состояние: { isVisible: true, filterType: "default" },
-    Цена: { isVisible: true, filterType: "default" },
-    Количество: { isVisible: true, filterType: "default" },
-    "Тип устройства": { isVisible: true, filterType: "default" },
-    Компания: { isVisible: true, filterType: "default" },
-    "Дата установки": { isVisible: true, filterType: "default" },
-  };
-  const [columnFilter, setColumnFilter] = useState(null);
   const open = Boolean(anchorEl);
-
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const visionSwitcherParam = { tableHeadersList, dispatch };
 
   return (
     <Grid
@@ -93,25 +82,7 @@ export const FieldSwicherDropMenu = () => {
               control={<Switch checked={tableHeadersList.includes(header)} />}
               label={header}
               value={header}
-              onChange={(e) => {
-                const headerCheck = tableHeadersList.includes(
-                  e.target.defaultValue
-                );
-                if (headerCheck)
-                  dispatch(
-                    setTableHeadersList(
-                      tableHeadersList.filter(
-                        (el) => el !== e.target.defaultValue
-                      )
-                    )
-                  );
-                else {
-                  const newHeaderList = tableHeadersList.concat(
-                    e.target.defaultValue
-                  );
-                  dispatch(setTableHeadersList(newHeaderList));
-                }
-              }}
+              onChange={(e) => visionSwitcher(e, visionSwitcherParam)}
             />
           ))}
         </FormGroup>

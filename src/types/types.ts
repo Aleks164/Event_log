@@ -1,3 +1,5 @@
+import { DispatchType } from "../hooks/redux";
+
 export type FilterIconType = "down" | "up" | "default";
 
 export type DataItemType = {
@@ -31,4 +33,24 @@ export type EventLogStateManagerType = {
 
 export type SortArrowType = {
     fieldIndex: number
+}
+
+export type SortingFieldParam = {
+    keyOfDataItem: string[];
+    fieldIndex: number;
+    curItem: keyof DataItemType;
+    type: FilterIconType;
+    dispatch: DispatchType;
+    data: DataItemType[];
+    currentPage: number;
+    tableRows: number;
+}
+
+export interface MyEventTarget extends EventTarget {
+    defaultValue: string
+}
+
+export type VisionSwitcherParamType = {
+    tableHeadersList: string[];
+    dispatch: DispatchType;
 }

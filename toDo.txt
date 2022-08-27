@@ -1,0 +1,7 @@
+max length of data in data Manager, use for pagination max page
+
+input field  = make useful
+
+spinner problem
+
+fix choose string after hiding any fields

@@ -1,7 +1,7 @@
 import React from "react";
 import { CircularProgress, Grid, Paper } from "@mui/material";
 import { useTypedSelector } from "../../hooks/redux";
-import { SortArrow } from "./SortArrow";
+import { SortArrow } from "./SortArrow/SortArrow";
 import { defaultData } from "../../utils/defaultData";
 import "./tableStyle.css";
 
