@@ -103,7 +103,6 @@ export const LogTable = () => {
       removeListeners();
     };
   }, [activeIndex, mouseMove, mouseUp, removeListeners]);
-  console.log("tableHeadersList", tableHeadersList);
   return (
     <Paper elevation={3} className="table-wrapper">
       <table
@@ -120,6 +119,7 @@ export const LogTable = () => {
                 ref={ref}
                 key={text}
                 className={tableHeadersList.includes(text) ? "" : "hideColumn"}
+                style={{ paddingTop: `${i === 0 ? "27px" : ""}` }}
               >
                 <Grid
                   container
@@ -129,7 +129,7 @@ export const LogTable = () => {
                   sx={{ minWidth: "max-content" }}
                 >
                   <span>{text}</span>
-                  <SortArrow />
+                  {i !== 0 && <SortArrow fieldIndex={i} />}
                 </Grid>
                 <div
                   style={{ height: tableHeight }}

@@ -13,7 +13,8 @@ export type DataItemType = {
 export type DataKeysType = keyof DataItemType;
 
 export type SortParamType = {
-    type: FilterIconType
+    type: FilterIconType,
+    curItem: DataKeysType
 }
 
 export type DataManagerStateType = {
@@ -26,4 +27,8 @@ export type EventLogStateManagerType = {
     tableHeadersList: string[],
     isLoading: boolean,
     error: string,
+}
+
+export type SortArrowType = {
+    fieldIndex: number
 }

@@ -9,8 +9,6 @@ export const TableCustomSpiner = () => {
   const { currentPage, tableRows, tableHeadersList } = useTypedSelector(
     (state) => state.eventLogStateManager
   );
-  // console.log("length", tableHeadersList.length);
-
   const rowNumberCalc = (index: number) =>
     String((currentPage - 1) * tableRows + index + 1);
   return (
@@ -23,8 +21,8 @@ export const TableCustomSpiner = () => {
       >
         <thead>
           <tr>
-            {tableHeadersList.map((text) => (
-              <th key={text}>
+            {tableHeadersList.map((text, i) => (
+              <th key={text} style={{ paddingTop: `${i === 0 ? "27px" : ""}` }}>
                 <Grid
                   container
                   direction="row"
@@ -33,7 +31,7 @@ export const TableCustomSpiner = () => {
                   sx={{ minWidth: "max-content" }}
                 >
                   <span>{text}</span>
-                  <SortArrow />
+                  {i !== 0 && <SortArrow fieldIndex={i} />}
                 </Grid>
               </th>
             ))}
