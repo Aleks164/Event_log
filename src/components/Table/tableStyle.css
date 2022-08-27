@@ -10,13 +10,7 @@ table {
   width: 100%;
   /* overflow-x: hidden; */
   display: grid;
-  grid-template-columns: minmax(150px, 1fr) minmax(150px, 1fr) minmax(
-      150px,
-      1fr
-    ) minmax(150px, 1fr) minmax(150px, 1fr) minmax(150px, 1fr) minmax(
-      150px,
-      1fr
-    ) minmax(150px, 1fr);
+  /* grid-template-columns: repeat(8, minmax(150px, 1fr)); */
 }
 
 table thead,
@@ -97,4 +91,8 @@ table tr td {
 .choosedLog {
   box-shadow: inset 0px 0px 100px 0px rgba(67, 69, 226, 0.35),
     inset 0px -5px 0px -1px #e5ac3b, inset 0px 5px 1px 0px #e5ac3b;
+}
+
+.hideColumn {
+  display: none;
 }

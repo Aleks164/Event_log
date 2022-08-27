@@ -15,6 +15,7 @@ import { setData } from "../../store/reducers/dataManager";
 import { setNewPageDataAction } from "../../store/actions/setNewPageDataAction";
 import { TableCustomSpiner } from "./TableCustomSpiner";
 import "./tableStyle.css";
+import { DataKeysType } from "../../types/types";
 
 const createHeaders = (headers: string[]) =>
   headers.map((item) => ({
@@ -27,9 +28,10 @@ export const LogTable = () => {
   const [choosedLog, setChoosedLog] = useState<number | null>(null);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const tableElement = useRef(null);
+  const keyOfDataItem = Object.keys(defaultData[0]);
 
   const { data } = useTypedSelector((state) => state.dataManager);
-  const { currentPage, tableRows, isLoading } = useTypedSelector(
+  const { currentPage, tableRows, tableHeadersList } = useTypedSelector(
     (state) => state.eventLogStateManager
   );
   const minCellWidth = 150;
@@ -76,11 +78,14 @@ export const LogTable = () => {
     removeListeners();
   }, [setActiveIndex, removeListeners]);
 
-  const calcStringStyle = (deviceType: string, index: number) => {
+  const calcStringStyle = (deviceType: string, index: number, i: number) => {
     if (index !== null && choosedLog === index) return "choosedLog";
     let resultClass = "type1Color";
     if (deviceType !== "Type1")
       resultClass = `${deviceType.toLowerCase()}Color`;
+    if (!tableHeadersList.includes(tableHeaders[i]))
+      resultClass += " hideColumn";
+
     return resultClass;
   };
 
@@ -98,14 +103,24 @@ export const LogTable = () => {
       removeListeners();
     };
   }, [activeIndex, mouseMove, mouseUp, removeListeners]);
-
+  console.log("tableHeadersList", tableHeadersList);
   return (
     <Paper elevation={3} className="table-wrapper">
-      <table className="resizeable-table" ref={tableElement}>
+      <table
+        className="resizeable-table"
+        style={{
+          gridTemplateColumns: `repeat(${tableHeadersList.length}, minmax(150px, 1fr))`,
+        }}
+        ref={tableElement}
+      >
         <thead>
           <tr>
             {columnsHeaders.map(({ ref, text }, i) => (
-              <th ref={ref} key={text}>
+              <th
+                ref={ref}
+                key={text}
+                className={tableHeadersList.includes(text) ? "" : "hideColumn"}
+              >
                 <Grid
                   container
                   direction="row"
@@ -136,30 +151,34 @@ export const LogTable = () => {
                 else setChoosedLog(index);
               }}
             >
-              <td className={calcStringStyle(item.deviceType, index)}>
-                {rowNumberCalc(index)}
-              </td>
-              <td className={calcStringStyle(item.deviceType, index)}>
-                {item.deviceId}
-              </td>
-              <td className={calcStringStyle(item.deviceType, index)}>
-                {item.isActive ? "On" : "Off"}
-              </td>
-              <td className={calcStringStyle(item.deviceType, index)}>
-                {item.price}
-              </td>
-              <td className={calcStringStyle(item.deviceType, index)}>
-                {item.quantity}
-              </td>
-              <td className={calcStringStyle(item.deviceType, index)}>
-                {item.deviceType}
-              </td>
-              <td className={calcStringStyle(item.deviceType, index)}>
-                {item.company}
-              </td>
-              <td className={calcStringStyle(item.deviceType, index)}>
-                {item.installationDate}
-              </td>
+              {tableHeaders.map((header, i) => {
+                if (i === 0)
+                  return (
+                    <td
+                      key={i}
+                      className={calcStringStyle(item.deviceType, index, i)}
+                    >
+                      {rowNumberCalc(index)}
+                    </td>
+                  );
+                if (header === "Состояние")
+                  return (
+                    <td
+                      key={i}
+                      className={calcStringStyle(item.deviceType, index, i)}
+                    >
+                      {item.isActive ? "On" : "Off"}
+                    </td>
+                  );
+                return (
+                  <td
+                    key={i}
+                    className={calcStringStyle(item.deviceType, index, i)}
+                  >
+                    {item[keyOfDataItem[i - 1] as DataKeysType]}
+                  </td>
+                );
+              })}
             </tr>
           ))}
         </tbody>

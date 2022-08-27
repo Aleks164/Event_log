@@ -12,7 +12,6 @@ export const EventLog = () => {
     (state) => state.eventLogStateManager
   );
   const dispatch = useTypedDispatch();
-  console.log(isLoading);
 
   useLayoutEffect(() => {
     dispatch(setNewPageDataAction(currentPage, tableRows));

@@ -10,6 +10,8 @@ export type DataItemType = {
     installationDate: string;
 }
 
+export type DataKeysType = keyof DataItemType;
+
 export type SortParamType = {
     type: FilterIconType
 }
@@ -21,6 +23,7 @@ export type DataManagerStateType = {
 export type EventLogStateManagerType = {
     currentPage: number,
     tableRows: number,
+    tableHeadersList: string[],
     isLoading: boolean,
     error: string,
 }

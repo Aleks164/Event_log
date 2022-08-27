@@ -30,7 +30,7 @@ export const PaginationField = () => {
     let newNumber = parseInt(nextPage, 10) + pageNumber;
     if (newNumber > 100) newNumber = 100;
     if (newNumber < 1) newNumber = 1;
-    console.log("tableRows", tableRows);
+    // console.log("tableRows", tableRows);
     setPageNumber(newNumber);
     dispatch(setCurrentPage(newNumber));
     dispatch(setNewPageDataAction(newNumber, 15));

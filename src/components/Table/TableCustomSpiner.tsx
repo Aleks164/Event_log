@@ -2,21 +2,28 @@ import React from "react";
 import { CircularProgress, Grid, Paper } from "@mui/material";
 import { useTypedSelector } from "../../hooks/redux";
 import { SortArrow } from "./SortArrow";
-import { tableHeaders } from "../../utils/tableHeaders";
+import { defaultData } from "../../utils/defaultData";
 import "./tableStyle.css";
 
 export const TableCustomSpiner = () => {
-  const { currentPage, tableRows } = useTypedSelector(
+  const { currentPage, tableRows, tableHeadersList } = useTypedSelector(
     (state) => state.eventLogStateManager
   );
+  // console.log("length", tableHeadersList.length);
+
   const rowNumberCalc = (index: number) =>
     String((currentPage - 1) * tableRows + index + 1);
   return (
     <Paper elevation={3} className="table-wrapper">
-      <table className="resizeable-table">
+      <table
+        className="resizeable-table"
+        style={{
+          gridTemplateColumns: `repeat(${tableHeadersList.length}, minmax(150px, 1fr))`,
+        }}
+      >
         <thead>
           <tr>
-            {tableHeaders.map((text) => (
+            {tableHeadersList.map((text) => (
               <th key={text}>
                 <Grid
                   container
@@ -40,15 +47,27 @@ export const TableCustomSpiner = () => {
         >
           {Array(tableRows)
             .fill("")
-            .map((item, index) => (
+            .map((empty, index) => (
               <tr key={index}>
-                {tableHeaders.map((_, i) => {
-                  if (i === 0)
+                {defaultData
+                  .slice(0, tableHeadersList.length)
+                  .map((text, i, arr) => {
+                    if (i === 0)
+                      return (
+                        <td key={tableRows + 1 + i}>{rowNumberCalc(index)}</td>
+                      );
+                    if (index === 1)
+                      return (
+                        <td style={{ color: "white" }} key={tableRows + 1 + i}>
+                          {text.deviceId}
+                        </td>
+                      );
                     return (
-                      <td key={tableRows + 1 + i}>{rowNumberCalc(index)}</td>
+                      <td style={{ color: "white" }} key={tableRows + 1 + i}>
+                        {empty}
+                      </td>
                     );
-                  return <td key={tableRows + 1 + i}>{item}</td>;
-                })}
+                  })}
               </tr>
             ))
             .concat([

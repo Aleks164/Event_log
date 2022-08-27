@@ -14,27 +14,28 @@ export const eventLogStateManager = createSlice({
   name: "eventLogStateManager",
   initialState,
   reducers: {
-    setCurrentPage: (state, action: PayloadAction<EventLogStateManagerType["currentPage"]>) => {
+    setCurrentPage: (
+      state,
+      action: PayloadAction<EventLogStateManagerType["currentPage"]>
+    ) => {
       state.currentPage = action.payload;
     },
-    setTableHeadersList: (state, action: PayloadAction<EventLogStateManagerType["tableHeadersList"]>) => {
-      // console.log("createSlice", action.payload);
-      state.tableHeadersList = action.payload;
-    },
-    setIsLoading: (state, action: PayloadAction<EventLogStateManagerType["isLoading"]>) => {
+    setIsLoading: (
+      state,
+      action: PayloadAction<EventLogStateManagerType["isLoading"]>
+    ) => {
       state.isLoading = action.payload;
     },
-    setError: (state, action: PayloadAction<EventLogStateManagerType["error"]>) => {
+    setError: (
+      state,
+      action: PayloadAction<EventLogStateManagerType["error"]>
+    ) => {
       state.error = action.payload;
     },
   },
 });
 
-export const {
-  setCurrentPage,
-  setTableHeadersList,
-  setIsLoading,
-  setError,
-} = eventLogStateManager.actions;
+export const { setCurrentPage, setIsLoading, setError } =
+  eventLogStateManager.actions;
 
 export default eventLogStateManager.reducer;
