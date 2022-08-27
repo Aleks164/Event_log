@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Button, Grid, Menu, MenuItem, Typography } from "@mui/material";
 import ListIcon from "@mui/icons-material/List";
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch from "@mui/material/Switch";
 import { tableHeaders } from "../../utils/tableHeaders";
 
 export const FieldSwicherDropMenu = () => {
@@ -30,7 +30,12 @@ export const FieldSwicherDropMenu = () => {
       }}
     >
       <Typography
-        sx={{ position: "absolute", left: "calc(50% - 70px)" }}
+        sx={{
+          position: "absolute",
+          left: "calc(50% - 70px)",
+          fontFamily: "inherit",
+          fontWeight: 700,
+        }}
         variant="h4"
       >
         Event log
@@ -61,9 +66,17 @@ export const FieldSwicherDropMenu = () => {
           horizontal: "left",
         }}
       >
-        <FormGroup sx={{p:"5px",pl:"20px",pr:"10px", userSelect:"none"}}>            
-      {tableHeaders.map((header,index)=><FormControlLabel key={index} control={<Switch defaultChecked />} label={header} />  )}
-    </FormGroup>    
+        <FormGroup
+          sx={{ p: "5px", pl: "20px", pr: "10px", userSelect: "none" }}
+        >
+          {tableHeaders.map((header, index) => (
+            <FormControlLabel
+              key={index}
+              control={<Switch defaultChecked />}
+              label={header}
+            />
+          ))}
+        </FormGroup>
       </Menu>
     </Grid>
   );

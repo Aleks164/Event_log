@@ -10,7 +10,7 @@ import { setNewPageDataAction } from "../../store/actions/setNewPageDataAction";
 
 export const PaginationField = () => {
   const dispatch = useTypedDispatch();
-  const { currentPage, rowsNumber } = useTypedSelector(
+  const { currentPage, tableRows, isLoading } = useTypedSelector(
     (state) => state.eventLogStateManager
   );
   const [pageNumber, setPageNumber] = useState<number>(currentPage);
@@ -19,7 +19,7 @@ export const PaginationField = () => {
     const timeOutId = setTimeout(() => {
       setPageNumber(newPagenumber);
       dispatch(setCurrentPage(newPagenumber));
-      dispatch(setNewPageDataAction(newPagenumber,15));      
+      dispatch(setNewPageDataAction(newPagenumber, 15));
     }, 300);
     return () => {
       clearTimeout(timeOutId);
@@ -29,10 +29,11 @@ export const PaginationField = () => {
   function nextPageHandler(nextPage: string) {
     let newNumber = parseInt(nextPage, 10) + pageNumber;
     if (newNumber > 100) newNumber = 100;
-    if (newNumber < 1) newNumber = 1;    
-     setPageNumber(newNumber);
-      dispatch(setCurrentPage(newNumber));
-      dispatch(setNewPageDataAction(newNumber,15));
+    if (newNumber < 1) newNumber = 1;
+    console.log("tableRows", tableRows);
+    setPageNumber(newNumber);
+    dispatch(setCurrentPage(newNumber));
+    dispatch(setNewPageDataAction(newNumber, 15));
   }
   return (
     <Grid
@@ -51,7 +52,7 @@ export const PaginationField = () => {
         onClick={() => {
           setPageWithDebouncer(1);
         }}
-        disabled={pageNumber === 1}
+        disabled={pageNumber === 1 || isLoading}
         aria-label="toTheStart"
         size="large"
       >
@@ -59,7 +60,7 @@ export const PaginationField = () => {
       </IconButton>
 
       <IconButton
-        disabled={pageNumber === 1}
+        disabled={pageNumber === 1 || isLoading}
         onClick={() => {
           nextPageHandler("-1");
         }}
@@ -71,10 +72,11 @@ export const PaginationField = () => {
 
       <TextField
         inputProps={{
-          inputMode: "numeric",         
+          inputMode: "numeric",
           min: 1,
           max: 100,
         }}
+        disabled={isLoading}
         value={pageNumber}
         className="pageNumberInput"
         sx={{ width: "70px", p: 1 }}
@@ -82,7 +84,7 @@ export const PaginationField = () => {
           let value = parseInt(e.target.value, 10);
           if (value > 100) value = 100;
           if (value < 1) value = 1;
-          setPageNumber(value);
+          setPageWithDebouncer(value);
         }}
       />
 
@@ -90,7 +92,7 @@ export const PaginationField = () => {
         onClick={() => {
           nextPageHandler("1");
         }}
-        disabled={pageNumber === 100}
+        disabled={pageNumber === 100 || isLoading}
         aria-label="next"
         size="large"
       >
@@ -98,7 +100,7 @@ export const PaginationField = () => {
       </IconButton>
 
       <IconButton
-        disabled={pageNumber === 100}
+        disabled={pageNumber === 100 || isLoading}
         onClick={() => {
           setPageWithDebouncer(100);
         }}

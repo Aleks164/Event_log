@@ -1,12 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { defaultData } from "../../utils/defaultData";
-import {DataManagerStateType} from "../../types/types"
+import { DataManagerStateType } from "../../types/types"
 
-const tempData = defaultData.filter((_,index)=>index<15);
+// const tempData = defaultData.filter((_,index)=>index<15);
 
 const initialState: DataManagerStateType = {
-  data: tempData, 
-  // temporary  change to []
+  // data: tempData, 
+  data: [],
 };
 
 export const dataManager = createSlice({
@@ -14,7 +14,7 @@ export const dataManager = createSlice({
   initialState,
   reducers: {
     setData: (state, action: PayloadAction<DataManagerStateType["data"]>) => {
-      state.data=action.payload;
+      state.data = action.payload;
     }
   },
 });

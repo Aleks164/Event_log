@@ -1,9 +1,19 @@
-import React, { useState, useCallback, useEffect, useRef } from "react";
-import { Grid, Paper } from "@mui/material";
+import React, {
+  useState,
+  useCallback,
+  useEffect,
+  useRef,
+  useLayoutEffect,
+} from "react";
+import { CircularProgress, Grid, Paper } from "@mui/material";
 import { useTypedDispatch, useTypedSelector } from "../../hooks/redux";
 import { defaultData } from "../../utils/defaultData";
 import { tableHeaders } from "../../utils/tableHeaders";
 import { SortArrow } from "./SortArrow";
+import { setIsLoading } from "../../store/reducers/eventLogStateManager";
+import { setData } from "../../store/reducers/dataManager";
+import { setNewPageDataAction } from "../../store/actions/setNewPageDataAction";
+import { TableCustomSpiner } from "./TableCustomSpiner";
 import "./tableStyle.css";
 
 const createHeaders = (headers: string[]) =>
@@ -17,19 +27,16 @@ export const LogTable = () => {
   const [choosedLog, setChoosedLog] = useState<number | null>(null);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const tableElement = useRef(null);
-   const { data } = useTypedSelector(
-    (state) => state.dataManager
-  );  
-  const { currentPage, rowsNumber } = useTypedSelector(
+
+  const { data } = useTypedSelector((state) => state.dataManager);
+  const { currentPage, tableRows, isLoading } = useTypedSelector(
     (state) => state.eventLogStateManager
-  );    
-  const minCellWidth = 150;  
-  const columns = createHeaders(tableHeaders);
-  
-  const rowNumberCalc = (index:number)=> {
-      console.log("123",currentPage,rowsNumber,index)
-      
-      return String((currentPage-1)*15+index+1)};
+  );
+  const minCellWidth = 150;
+  const columnsHeaders = createHeaders(tableHeaders);
+
+  const rowNumberCalc = (index: number) =>
+    String((currentPage - 1) * tableRows + index + 1);
 
   const mouseDown = (index: number) => {
     setActiveIndex(index);
@@ -37,8 +44,8 @@ export const LogTable = () => {
 
   const mouseMove = useCallback(
     (e) => {
-      const gridColumns = columns.map((col, i) => {         
-        if (i === activeIndex&&i!==0) {
+      const gridColumns = columnsHeaders.map((col, i) => {
+        if (i === activeIndex) {
           // Calculate the column width
           const width = e.clientX - col.ref.current.offsetLeft;
 
@@ -56,7 +63,7 @@ export const LogTable = () => {
         " "
       )}`;
     },
-    [activeIndex, columns, minCellWidth]
+    [activeIndex, columnsHeaders, minCellWidth]
   );
 
   const removeListeners = useCallback(() => {
@@ -97,7 +104,7 @@ export const LogTable = () => {
       <table className="resizeable-table" ref={tableElement}>
         <thead>
           <tr>
-            {columns.map(({ ref, text }, i) => (
+            {columnsHeaders.map(({ ref, text }, i) => (
               <th ref={ref} key={text}>
                 <Grid
                   container
@@ -109,13 +116,13 @@ export const LogTable = () => {
                   <span>{text}</span>
                   <SortArrow />
                 </Grid>
-                {i>0&&<div
+                <div
                   style={{ height: tableHeight }}
                   onMouseDown={() => mouseDown(i)}
                   className={`resize-handle ${
                     activeIndex === i ? "active" : "idle"
                   }`}
-                />}
+                />
               </th>
             ))}
           </tr>
@@ -123,7 +130,7 @@ export const LogTable = () => {
         <tbody>
           {data.map((item, index) => (
             <tr
-            key={index}
+              key={index}
               onClick={() => {
                 if (choosedLog === index) setChoosedLog(null);
                 else setChoosedLog(index);

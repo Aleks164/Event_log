@@ -2,20 +2,20 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { EventLogStateManagerType } from "../../types/types";
 
 const initialState: EventLogStateManagerType = {
-   rowsNumber:15,
-    currentPage:1,
-  isLoading: false,  
-  error: "", 
+  tableRows: 15,
+  currentPage: 1,
+  isLoading: false,
+  error: "",
 };
 
 export const eventLogStateManager = createSlice({
   name: "eventLogStateManager",
   initialState,
   reducers: {
-    setCurrentPage: (state, action:PayloadAction<EventLogStateManagerType["currentPage"]>) => {
+    setCurrentPage: (state, action: PayloadAction<EventLogStateManagerType["currentPage"]>) => {
       state.currentPage = action.payload;
     },
-    setIsLoading: (state, action:PayloadAction<EventLogStateManagerType["isLoading"]>) => {
+    setIsLoading: (state, action: PayloadAction<EventLogStateManagerType["isLoading"]>) => {
       state.isLoading = action.payload;
     },
     setError: (state, action: PayloadAction<EventLogStateManagerType["error"]>) => {
@@ -25,7 +25,7 @@ export const eventLogStateManager = createSlice({
 });
 
 export const {
-    setCurrentPage,
+  setCurrentPage,
   setIsLoading,
   setError,
 } = eventLogStateManager.actions;
