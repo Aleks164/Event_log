@@ -15,6 +15,9 @@ module.exports = {
       : "eval-source-map",
   resolve: {
     extensions: [".js", ".jsx", ".ts", ".tsx"],
+    alias: {
+      '@': resolve(__dirname, 'src'),
+    },
   },
   devServer: {
     port: 9000,

@@ -1,9 +1,19 @@
 import React, { useState } from "react";
-import { Button, Grid, Menu, MenuItem, Typography } from "@mui/material";
+import { Button, Grid, Menu, Typography } from "@mui/material";
 import ListIcon from "@mui/icons-material/List";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch from "@mui/material/Switch";
+import { tableHeaders } from "../../../utils/tableHeaders";
+import { useTypedDispatch, useTypedSelector } from "../../../hooks/redux";
+import { visionSwitcher } from "./visionSwitcher";
 
-export const FieldManager = () => {
+export const FieldSwicherDropMenu = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const dispatch = useTypedDispatch();
+  const { tableHeadersList } = useTypedSelector(
+    (state) => state.eventLogStateManager
+  );
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -11,6 +21,7 @@ export const FieldManager = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const visionSwitcherParam = { tableHeadersList, dispatch };
 
   return (
     <Grid
@@ -26,7 +37,12 @@ export const FieldManager = () => {
       }}
     >
       <Typography
-        sx={{ position: "absolute", left: "calc(50% - 70px)" }}
+        sx={{
+          position: "absolute",
+          left: "calc(50% - 70px)",
+          fontFamily: "inherit",
+          fontWeight: 700,
+        }}
         variant="h4"
       >
         Event log
@@ -57,9 +73,19 @@ export const FieldManager = () => {
           horizontal: "left",
         }}
       >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
-        <MenuItem onClick={handleClose}>My account</MenuItem>
-        <MenuItem onClick={handleClose}>Logout</MenuItem>
+        <FormGroup
+          sx={{ p: "5px", pl: "20px", pr: "10px", userSelect: "none" }}
+        >
+          {tableHeaders.map((header, index) => (
+            <FormControlLabel
+              key={index}
+              control={<Switch checked={tableHeadersList.includes(header)} />}
+              label={header}
+              value={header}
+              onChange={(e) => visionSwitcher(e, visionSwitcherParam)}
+            />
+          ))}
+        </FormGroup>
       </Menu>
     </Grid>
   );
