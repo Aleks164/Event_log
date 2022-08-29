@@ -1,3 +1,5 @@
+import React from "react";
+import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
 import { DispatchType } from "../hooks/redux";
 
 export type FilterIconType = "down" | "up" | "default";
@@ -27,9 +29,9 @@ export type DataManagerStateType = {
 export type EventLogStateManagerType = {
     currentPage: number;
     tableRows: number;
+    minColumnWidth: number;
     tableHeadersList: string[];
     isLoading: boolean;
-    tableRowsStyle:string;
     error: string;
 }
 
@@ -54,7 +56,7 @@ export interface MyEventTarget extends EventTarget {
 }
 
 export type VisionSwitcherParamType = {
-    tableHeadersList: string[];
+    lastComposition: string[];
     dispatch: DispatchType;
 }
 
@@ -75,10 +77,22 @@ export type NextPageHandlerParamType = {
 }
 
 export type UserSettingsStateType = {
-  currentPage: number;
-  tableRowsStyle: string;
-   type: FilterIconType;
+    currentPage: number;
+    tableRowsStyle: string;
+    type: FilterIconType;
     curItem: DataKeysType;
-     tableHeadersList: string[];
-  }
+    tableHeadersList: string[];
 }
+
+export type TooltipButtonParamType = {
+    tooltipTitle: string; onClick: () => void; disabled: boolean; ArrowIcon: typeof KeyboardDoubleArrowLeftIcon
+}
+
+export type UserSettingsKeysType = "currentPage" | "tableHeadersList" | "sortParam";
+
+export type SortParamStorageType = {
+    type: FilterIconType;
+    curItem: DataKeysType;
+} | null
+
+export type LocalStorageItemsType = UserSettingsStateType["currentPage" | "tableHeadersList"] | SortParamStorageType

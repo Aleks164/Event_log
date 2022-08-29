@@ -1,6 +1,6 @@
-import {UserSettingsStateType} from "../types/types";
+import { UserSettingsKeysType, LocalStorageItemsType } from "../types/types";
 
-export function readUserSettings():UserSettingsStateType|{} {
-  const item = window.localStorage.getItem("userSettings") as UserSettingsStateType;
-  return item === null ? {} : JSON.parse(item);
+export function readUserSettings(key: UserSettingsKeysType): LocalStorageItemsType | null {
+  const item = window.localStorage.getItem(key);
+  return item === null ? null : JSON.parse(item);
 }

@@ -1,6 +1,6 @@
-import {UserSettingsStateType} from "../types/types";
+import { UserSettingsKeysType, LocalStorageItemsType } from "../types/types";
 
-export function saveUserSettings(items: UserSettingsStateType) {
+export function saveUserSettings(items: LocalStorageItemsType, key: UserSettingsKeysType) {
   const imputsPars = JSON.stringify(items);
-  window.localStorage.setItem("userSettings", imputsPars);
+  window.localStorage.setItem(key, imputsPars);
 }

@@ -1,20 +1,11 @@
-import React, {
-  useState,
-  useCallback,
-  useEffect,
-  useRef,
-  useLayoutEffect,
-} from "react";
-import { CircularProgress, Grid, Paper } from "@mui/material";
-import { useTypedDispatch, useTypedSelector } from "@/hooks/redux";
+import React, { useState, useCallback, useEffect, useRef } from "react";
+import { Grid, Paper } from "@mui/material";
+import { useTypedSelector } from "@/hooks/redux";
 import { defaultData } from "@/utils/defaultData";
 import { tableHeaders } from "@/utils/tableHeaders";
 import { SortArrow } from "./SortArrow/SortArrow";
-import { setIsLoading } from "@/store/reducers/eventLogStateManager";
-import { setData } from "@/store/reducers/dataManager";
-import { setNewPageDataAction } from "@/store/actions/setNewPageDataAction";
-import { TableCustomSpiner } from "./TableCustomSpiner";
-import { DataKeysType } from "@/types/types";
+import { DataKeysType, UserSettingsStateType } from "@/types/types";
+import { readUserSettings } from "@/utils/readUserSettings";
 import "./tableStyle.css";
 
 const createHeaders = (headers: string[]) =>
@@ -29,14 +20,14 @@ export const LogTable = () => {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const tableElement = useRef(null);
   const keyOfDataItem = Object.keys(defaultData[0]);
-  
-
-const { curItem, type } = useTypedSelector((state) => state.sortManager);
+  const storageTableHeaders = readUserSettings("tableHeadersList");
 
   const { data } = useTypedSelector((state) => state.dataManager);
-  const { currentPage, tableRows, tableHeadersList,minColumnWidth} = useTypedSelector(
-    (state) => state.eventLogStateManager
-  );   
+  const { currentPage, tableRows, tableHeadersList, minColumnWidth } =
+    useTypedSelector((state) => state.eventLogStateManager);
+  const lastComposition =
+    (storageTableHeaders as UserSettingsStateType["tableHeadersList"]) ||
+    tableHeadersList;
   const columnsHeaders = createHeaders(tableHeaders);
 
   const rowNumberCalc = (index: number) =>
@@ -63,9 +54,9 @@ const { curItem, type } = useTypedSelector((state) => state.sortManager);
       });
 
       // Assign the px values to the table
-      tableElement.current.style.gridTemplateColumns = `${gridColumns.filter((column=>column!=="0px")).join(
-        " "
-      )}`;
+      tableElement.current.style.gridTemplateColumns = `${gridColumns
+        .filter((column) => column !== "0px")
+        .join(" ")}`;
     },
     [activeIndex, columnsHeaders, minColumnWidth]
   );
@@ -81,7 +72,7 @@ const { curItem, type } = useTypedSelector((state) => state.sortManager);
   }, [setActiveIndex, removeListeners]);
 
   const calcStringClass = (deviceType: string, index: number, i: number) => {
-    if (!tableHeadersList.includes(tableHeaders[i])) return "hideColumn";
+    if (!lastComposition.includes(tableHeaders[i])) return "hideColumn";
     if (index !== null && choosedLog === index) return "choosedLog";
     let resultClass = "type1Color";
     if (deviceType !== "Type1")
@@ -93,14 +84,12 @@ const { curItem, type } = useTypedSelector((state) => state.sortManager);
   useEffect(() => {
     setTableHeight(tableElement?.current?.offsetHeight);
   }, []);
-  
-  
 
   useEffect(() => {
     if (activeIndex !== null) {
       window.addEventListener("mousemove", mouseMove);
       window.addEventListener("mouseup", mouseUp);
-      window.getSelection().removeAllRanges(); // need to test at chrome, mozila is ok
+      window.getSelection()?.removeAllRanges(); // need to test at chrome, mozila is ok
     }
 
     return () => {
@@ -112,7 +101,7 @@ const { curItem, type } = useTypedSelector((state) => state.sortManager);
       <table
         className="resizeable-table"
         style={{
-          gridTemplateColumns: `repeat(${tableHeadersList.length}, minmax(150px, 1fr))`,
+          gridTemplateColumns: `repeat(${lastComposition.length}, minmax(150px, 1fr))`,
         }}
         ref={tableElement}
       >
@@ -122,7 +111,7 @@ const { curItem, type } = useTypedSelector((state) => state.sortManager);
               <th
                 ref={ref}
                 key={text}
-                className={tableHeadersList.includes(text) ? "" : "hideColumn"}
+                className={lastComposition.includes(text) ? "" : "hideColumn"}
                 style={{ paddingTop: `${i === 0 ? "27px" : ""}` }}
               >
                 <Grid

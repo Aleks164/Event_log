@@ -7,7 +7,6 @@ const initialState: EventLogStateManagerType = {
   minColumnWidth: 150,
   tableHeadersList: tableHeaders,
   currentPage: 1,
-  tableRowsStyle:`repeat(8, minmax(150px, 1fr))`,
   isLoading: false,
   error: "",
 };
@@ -19,11 +18,8 @@ export const eventLogStateManager = createSlice({
     setCurrentPage: (state, action: PayloadAction<EventLogStateManagerType["currentPage"]>) => {
       state.currentPage = action.payload;
     },
-    setTableHeadersList: (state, action: PayloadAction<EventLogStateManagerType["tableHeadersList"]>) => {      
+    setTableHeadersList: (state, action: PayloadAction<EventLogStateManagerType["tableHeadersList"]>) => {
       state.tableHeadersList = action.payload;
-    },
-    setTableRowsStyle: (state, action: PayloadAction<EventLogStateManagerType["tableRowsStyle"]>) => {      
-      state.tableRowsStyle = action.payload;
     },
     setIsLoading: (state, action: PayloadAction<EventLogStateManagerType["isLoading"]>) => {
       state.isLoading = action.payload;
@@ -37,7 +33,6 @@ export const eventLogStateManager = createSlice({
 export const {
   setCurrentPage,
   setTableHeadersList,
-  setTableRowsStyle,
   setIsLoading,
   setError,
 } = eventLogStateManager.actions;

@@ -7,13 +7,19 @@ import Switch from "@mui/material/Switch";
 import { tableHeaders } from "@/utils/tableHeaders";
 import { useTypedDispatch, useTypedSelector } from "@/hooks/redux";
 import { visionSwitcher } from "./visionSwitcher";
+import { readUserSettings } from "@/utils/readUserSettings";
+import { UserSettingsStateType } from "@/types/types";
 
-export const FieldSwicherDropMenu = ({currentSettings}) => {
+export const FieldSwicherDropMenu = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const dispatch = useTypedDispatch();
+  const storageTableHeaders = readUserSettings("tableHeadersList");
   const { tableHeadersList } = useTypedSelector(
     (state) => state.eventLogStateManager
   );
+  const lastComposition =
+    (storageTableHeaders as UserSettingsStateType["tableHeadersList"]) ||
+    tableHeadersList;
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -21,7 +27,7 @@ export const FieldSwicherDropMenu = ({currentSettings}) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const visionSwitcherParam = { tableHeadersList, dispatch };
+  const visionSwitcherParam = { lastComposition, dispatch };
 
   return (
     <Grid
@@ -79,10 +85,10 @@ export const FieldSwicherDropMenu = ({currentSettings}) => {
           {tableHeaders.map((header, index) => (
             <FormControlLabel
               key={index}
-              control={<Switch checked={tableHeadersList.includes(header)} />}
+              control={<Switch checked={lastComposition.includes(header)} />}
               label={header}
               value={header}
-              onChange={(e) => visionSwitcher(e, visionSwitcherParam,currentSettings)}
+              onChange={(e) => visionSwitcher(e, visionSwitcherParam)}
             />
           ))}
         </FormGroup>

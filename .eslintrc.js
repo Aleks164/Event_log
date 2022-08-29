@@ -12,6 +12,7 @@ module.exports = {
   rules: {
     "import/prefer-default-export": "off",
     "no-console": "off",
+    "no-unused-expressions": ["error", { allowShortCircuit: true }],
     "no-alert": "off",
     "no-restricted-globals": "off",
     "no-plusplus": "off",

@@ -1,11 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { IconButton, Grid } from "@mui/material";
-
-import { DataKeysType, SortArrowType } from "@/types/types";
+import {
+  DataKeysType,
+  SortArrowType,
+  SortParamStorageType,
+} from "@/types/types";
 import { useTypedSelector, useTypedDispatch } from "@/hooks/redux";
 import { defaultData } from "@/utils/defaultData";
 import { curFilterIcon } from "./curFilterIcon";
 import { sortingField } from "./sortingField";
+import { readUserSettings } from "@/utils/readUserSettings";
 
 export const SortArrow = ({ fieldIndex }: SortArrowType) => {
   const { data, serverDataLength } = useTypedSelector(
@@ -15,19 +19,29 @@ export const SortArrow = ({ fieldIndex }: SortArrowType) => {
   const { currentPage, tableRows } = useTypedSelector(
     (state) => state.eventLogStateManager
   );
+  const storageSortParam = readUserSettings("sortParam");
+  const lastSortParam = (storageSortParam as SortParamStorageType) || {
+    curItem,
+    type,
+  };
+
   const dispatch = useTypedDispatch();
   const keyOfDataItem = Object.keys(defaultData[0]);
   const filterParams = {
     keyOfDataItem,
     fieldIndex,
-    curItem,
-    type,
+    curItem: lastSortParam.curItem,
+    type: lastSortParam.type,
     dispatch,
     data,
     currentPage,
     tableRows,
     serverDataLength,
   };
+
+  // useEffect(() => {
+  //   if (lastSortParam.type !== "default") sortingField(filterParams);
+  // }, []);
 
   return (
     <Grid
@@ -44,8 +58,9 @@ export const SortArrow = ({ fieldIndex }: SortArrowType) => {
         size="small"
       >
         {curFilterIcon(
-          type,
-          curItem === (keyOfDataItem[fieldIndex - 1] as DataKeysType)
+          lastSortParam.type,
+          lastSortParam.curItem ===
+            (keyOfDataItem[fieldIndex - 1] as DataKeysType)
         )}
       </IconButton>
     </Grid>

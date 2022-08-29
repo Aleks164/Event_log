@@ -9,43 +9,33 @@ import { saveUserSettings } from "../utils/saveUserSettings";
 import { TableCustomSpiner } from "./TableComponents/TableCustomSpiner";
 import { setNewPageDataAction } from "../store/actions/setNewPageDataAction";
 import { setSortType, setCurItem } from "@/store/reducers/sortManager";
-import { setIsLoading,setCurrentPage,setTableRowsStyle,setTableHeadersList  } from "../store/reducers/eventLogStateManager";
+import {
+  setIsLoading,
+  setCurrentPage,
+  setTableRowsStyle,
+  setTableHeadersList,
+} from "../store/reducers/eventLogStateManager";
 import { setFullDataLength } from "../store/actions/setFullDataLength";
+import { UserSettingsStateType } from "@/types/types";
 
 export const EventLog = () => {
   const { tableRows, isLoading } = useTypedSelector(
     (state) => state.eventLogStateManager
-  );  
+  );
   const { serverDataLength } = useTypedSelector((state) => state.dataManager);
-  const dispatch = useTypedDispatch();  
+  const dispatch = useTypedDispatch();
 
   useLayoutEffect(() => {
-      let {currentPage,tableRowsStyle,type,curItem,tableHeadersList} = readUserSettings();
-      
-      currentPage&&dispatch(setCurrentPage(currentPage));
-      tableRowsStyle&&dispatch(setTableRowsStyle(tableRowsStyle));
-      tableHeadersList&&dispatch(setTableHeadersList(tableHeadersList));
-      type&&dispatch(setSortType(type));
-      curItem&&dispatch(setCurItem(curItem));
-      
+    const storagePage = readUserSettings("currentPage");
+    const lastPage = (storagePage as UserSettingsStateType["currentPage"]) || 1;
+
     dispatch(setIsLoading(true));
     dispatch(setFullDataLength());
-    if(!currentPage) currentPage =1;
-    dispatch(setNewPageDataAction(currentPage, tableRows, serverDataLength));
+    dispatch(setNewPageDataAction(lastPage, tableRows, serverDataLength));
     setTimeout(() => {
       dispatch(setIsLoading(false));
     }, 500);
   }, []);
-
- const {
-  tableHeadersList,
-  currentPage,
-  tableRowsStyle } = useTypedSelector(
-    (state) => state.eventLogStateManager
-  );
-  const { curItem, type } = useTypedSelector((state) => state.sortManager);  
-  
-  const currentSettings = {currentPage,tableRowsStyle,type,curItem,tableHeadersList} 
 
   return (
     <Paper
@@ -58,9 +48,9 @@ export const EventLog = () => {
         justifyContent="center"
         alignItems="center"
       >
-        <FieldSwicherDropMenu currentSettings={currentSettings} />
-        {!isLoading ? <LogTable currentSettings={currentSettings} /> : <TableCustomSpiner currentSettings={currentSettings} />}
-        <PaginationField currentSettings={currentSettings} />
+        <FieldSwicherDropMenu />
+        {!isLoading ? <LogTable /> : <TableCustomSpiner />}
+        <PaginationField />
       </Grid>
     </Paper>
   );
