@@ -6,8 +6,24 @@
 
 +fix choose string after hiding any fields
 
--fix resize prolem
++fix resize prolem
 
 -conect local storage
 
 + refactorinf recursion calcPageNumber by %
+
+-? fix range problem
+
+- think about moving the selected row after filtering
+
+-? add rowLength to state
+
+- should be number of rows filtred?
+
+- change type => sortType
+
+- create toolip button component
+
+- check const {data} unchangeability
+
+- storage switcher problem
