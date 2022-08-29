@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { SortParamType } from "../../types/types";
+import { SortParamType } from "./.@/types/types";
 
 const initialState: SortParamType = {
   type: "down",

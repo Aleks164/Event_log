@@ -1,9 +1,9 @@
 import React from "react";
 import { IconButton, Grid } from "@mui/material";
 
-import { DataKeysType, SortArrowType } from "../../../types/types";
-import { useTypedSelector, useTypedDispatch } from "../../../hooks/redux";
-import { defaultData } from "../../../utils/defaultData";
+import { DataKeysType, SortArrowType } from "@/types/types";
+import { useTypedSelector, useTypedDispatch } from "@/hooks/redux";
+import { defaultData } from "@/utils/defaultData";
 import { curFilterIcon } from "./curFilterIcon";
 import { sortingField } from "./sortingField";
 

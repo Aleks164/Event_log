@@ -15,25 +15,26 @@ export type DataItemType = {
 export type DataKeysType = keyof DataItemType;
 
 export type SortParamType = {
-    type: FilterIconType,
-    curItem: DataKeysType
+    type: FilterIconType;
+    curItem: DataKeysType;
 }
 
 export type DataManagerStateType = {
-    data: DataItemType[],
-    serverDataLength: number
+    data: DataItemType[];
+    serverDataLength: number;
 }
 
 export type EventLogStateManagerType = {
-    currentPage: number,
-    tableRows: number,
-    tableHeadersList: string[],
-    isLoading: boolean,
-    error: string,
+    currentPage: number;
+    tableRows: number;
+    tableHeadersList: string[];
+    isLoading: boolean;
+    tableRowsStyle:string;
+    error: string;
 }
 
 export type SortArrowType = {
-    fieldIndex: number
+    fieldIndex: number;
 }
 
 export type SortingFieldParam = {
@@ -49,7 +50,7 @@ export type SortingFieldParam = {
 }
 
 export interface MyEventTarget extends EventTarget {
-    defaultValue: string
+    defaultValue: string;
 }
 
 export type VisionSwitcherParamType = {
@@ -71,4 +72,13 @@ export type NextPageHandlerParamType = {
     serverDataLength: number;
     dispatch: DispatchType;
     setPageNumber: React.Dispatch<React.SetStateAction<number>>;
+}
+
+export type UserSettingsStateType = {
+  currentPage: number;
+  tableRowsStyle: string;
+   type: FilterIconType;
+    curItem: DataKeysType;
+     tableHeadersList: string[];
+  }
 }

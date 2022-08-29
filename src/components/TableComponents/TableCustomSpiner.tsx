@@ -1,16 +1,17 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { CircularProgress, Grid, Paper } from "@mui/material";
-import { useTypedSelector } from "../../hooks/redux";
+import { useTypedSelector,useTypedDispatch } from "@/hooks/redux";
 import { SortArrow } from "./SortArrow/SortArrow";
-import { defaultData } from "../../utils/defaultData";
+import { defaultData } from "@/utils/defaultData";
 import "./tableStyle.css";
 
 export const TableCustomSpiner = () => {
-  const { currentPage, tableRows, tableHeadersList } = useTypedSelector(
+  const { currentPage, tableRows, tableHeadersList,isLoading } = useTypedSelector(
     (state) => state.eventLogStateManager
   );
   const rowNumberCalc = (index: number) =>
     String((currentPage - 1) * tableRows + index + 1);
+    
   return (
     <Paper elevation={3} className="table-wrapper">
       <table

@@ -9,7 +9,7 @@ import { setPageWithDebouncer } from "./setPageWithDebouncer";
 import { useTypedDispatch, useTypedSelector } from "@/hooks/redux";
 import { nextPageHandler } from "./nextPageHandler";
 
-export const PaginationField = () => {
+export const PaginationField = ({currentSettings}) => {
   const dispatch = useTypedDispatch();
   const { currentPage, tableRows, isLoading } = useTypedSelector(
     (state) => state.eventLogStateManager
@@ -51,7 +51,7 @@ export const PaginationField = () => {
       <Tooltip aria-disabled={pageNumber === 1 || isLoading} title={<p style={{ fontSize: "1rem" }}>Back to 100</p>}>
         <IconButton
           onClick={() => {
-            nextPageHandler(nextPageHandlerParam, "-100");
+            nextPageHandler(nextPageHandlerParam, "-100",currentSettings);            
           }}
           disabled={pageNumber === 1 || isLoading}
           aria-label="toTheStart"
@@ -65,7 +65,7 @@ export const PaginationField = () => {
         <IconButton
           disabled={pageNumber === 1 || isLoading}
           onClick={() => {
-            nextPageHandler(nextPageHandlerParam, "-1");
+            nextPageHandler(nextPageHandlerParam, "-1",currentSettings);
           }}
           aria-label="prev"
           size="large"
@@ -84,13 +84,13 @@ export const PaginationField = () => {
         className="pageNumberInput"
         sx={{ width: "70px", p: 1 }}
         onChange={(e) => {
-          setPageWithDebouncer(setPageWithDebouncerParam, e.target.value);
+          setPageWithDebouncer(setPageWithDebouncerParam, e.target.value,currentSettings);
         }}
       />
       <Tooltip aria-disabled={isLoading} title={<p style={{ fontSize: "1rem" }}>Forward</p>}>
         <IconButton
           onClick={() => {
-            nextPageHandler(nextPageHandlerParam, "1");
+            nextPageHandler(nextPageHandlerParam, "1",currentSettings);
           }}
           disabled={isLoading}
           aria-label="next"
@@ -104,7 +104,7 @@ export const PaginationField = () => {
         <IconButton
           disabled={isLoading}
           onClick={() => {
-            nextPageHandler(nextPageHandlerParam, "100");
+            nextPageHandler(nextPageHandlerParam, "100",currentSettings);
           }}
           aria-label="toTheFinish"
           size="large"

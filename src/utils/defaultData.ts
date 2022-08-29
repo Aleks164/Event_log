@@ -1,4 +1,4 @@
-import {DataItemType} from "../types/types"
+import {DataItemType} from "../types/types";
 
 export const defaultData:DataItemType[] = [
     {

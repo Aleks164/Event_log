@@ -1,11 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { defaultData } from "../../utils/defaultData";
-import { DataManagerStateType } from "../../types/types"
-
-// const tempData = defaultData.filter((_,index)=>index<15);
+import { DataManagerStateType } from "@/types/types"
 
 const initialState: DataManagerStateType = {
-  // data: tempData, 
   data: [],
   serverDataLength: 1000
 };

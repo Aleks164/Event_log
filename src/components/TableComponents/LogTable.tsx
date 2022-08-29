@@ -6,16 +6,16 @@ import React, {
   useLayoutEffect,
 } from "react";
 import { CircularProgress, Grid, Paper } from "@mui/material";
-import { useTypedDispatch, useTypedSelector } from "../../hooks/redux";
-import { defaultData } from "../../utils/defaultData";
-import { tableHeaders } from "../../utils/tableHeaders";
+import { useTypedDispatch, useTypedSelector } from "@/hooks/redux";
+import { defaultData } from "@/utils/defaultData";
+import { tableHeaders } from "@/utils/tableHeaders";
 import { SortArrow } from "./SortArrow/SortArrow";
-import { setIsLoading } from "../../store/reducers/eventLogStateManager";
-import { setData } from "../../store/reducers/dataManager";
-import { setNewPageDataAction } from "../../store/actions/setNewPageDataAction";
+import { setIsLoading } from "@/store/reducers/eventLogStateManager";
+import { setData } from "@/store/reducers/dataManager";
+import { setNewPageDataAction } from "@/store/actions/setNewPageDataAction";
 import { TableCustomSpiner } from "./TableCustomSpiner";
+import { DataKeysType } from "@/types/types";
 import "./tableStyle.css";
-import { DataKeysType } from "../../types/types";
 
 const createHeaders = (headers: string[]) =>
   headers.map((item) => ({
@@ -29,12 +29,14 @@ export const LogTable = () => {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const tableElement = useRef(null);
   const keyOfDataItem = Object.keys(defaultData[0]);
+  
+
+const { curItem, type } = useTypedSelector((state) => state.sortManager);
 
   const { data } = useTypedSelector((state) => state.dataManager);
-  const { currentPage, tableRows, tableHeadersList } = useTypedSelector(
+  const { currentPage, tableRows, tableHeadersList,minColumnWidth} = useTypedSelector(
     (state) => state.eventLogStateManager
-  );
-  const minCellWidth = 150;
+  );   
   const columnsHeaders = createHeaders(tableHeaders);
 
   const rowNumberCalc = (index: number) =>
@@ -51,7 +53,7 @@ export const LogTable = () => {
           // Calculate the column width
           const width = e.clientX - col.ref.current.offsetLeft;
 
-          if (width >= minCellWidth) {
+          if (width >= minColumnWidth) {
             return `${width}px`;
           }
         }
@@ -61,11 +63,11 @@ export const LogTable = () => {
       });
 
       // Assign the px values to the table
-      tableElement.current.style.gridTemplateColumns = `${gridColumns.join(
+      tableElement.current.style.gridTemplateColumns = `${gridColumns.filter((column=>column!=="0px")).join(
         " "
       )}`;
     },
-    [activeIndex, columnsHeaders, minCellWidth]
+    [activeIndex, columnsHeaders, minColumnWidth]
   );
 
   const removeListeners = useCallback(() => {
@@ -91,11 +93,14 @@ export const LogTable = () => {
   useEffect(() => {
     setTableHeight(tableElement?.current?.offsetHeight);
   }, []);
+  
+  
 
   useEffect(() => {
     if (activeIndex !== null) {
       window.addEventListener("mousemove", mouseMove);
       window.addEventListener("mouseup", mouseUp);
+      window.getSelection().removeAllRanges(); // need to test at chrome, mozila is ok
     }
 
     return () => {

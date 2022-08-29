@@ -4,11 +4,11 @@ import ListIcon from "@mui/icons-material/List";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
-import { tableHeaders } from "../../../utils/tableHeaders";
-import { useTypedDispatch, useTypedSelector } from "../../../hooks/redux";
+import { tableHeaders } from "@/utils/tableHeaders";
+import { useTypedDispatch, useTypedSelector } from "@/hooks/redux";
 import { visionSwitcher } from "./visionSwitcher";
 
-export const FieldSwicherDropMenu = () => {
+export const FieldSwicherDropMenu = ({currentSettings}) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const dispatch = useTypedDispatch();
   const { tableHeadersList } = useTypedSelector(
@@ -82,7 +82,7 @@ export const FieldSwicherDropMenu = () => {
               control={<Switch checked={tableHeadersList.includes(header)} />}
               label={header}
               value={header}
-              onChange={(e) => visionSwitcher(e, visionSwitcherParam)}
+              onChange={(e) => visionSwitcher(e, visionSwitcherParam,currentSettings)}
             />
           ))}
         </FormGroup>
