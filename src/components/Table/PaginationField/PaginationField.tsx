@@ -5,12 +5,8 @@ import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrow
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
 import { setPageWithDebouncer } from "./setPageWithDebouncer";
+// import { ButtonWithTooltip } from "./ButtonWithTooltip";
 import { useTypedDispatch, useTypedSelector } from "@/hooks/redux";
-import { setNewPageDataAction } from "@/store/actions/setNewPageDataAction";
-import {
-  setCurrentPage,
-  setIsLoading,
-} from "@/store/reducers/eventLogStateManager";
 import { nextPageHandler } from "./nextPageHandler";
 
 export const PaginationField = () => {
@@ -49,7 +45,10 @@ export const PaginationField = () => {
         pb: "5px",
       }}
     >
-      <Tooltip title={<p style={{ fontSize: "1rem" }}>Back to 100</p>}>
+        {/* <ButtonWithTooltip tooltipTitle={"Back to 100"} onClick={() => {
+            nextPageHandler(nextPageHandlerParam, "-100");
+          }} disabled={pageNumber === 1 || isLoading} ArrowIcon={KeyboardDoubleArrowLeftIcon}/> */}
+      <Tooltip aria-disabled={pageNumber === 1 || isLoading} title={<p style={{ fontSize: "1rem" }}>Back to 100</p>}>
         <IconButton
           onClick={() => {
             nextPageHandler(nextPageHandlerParam, "-100");
@@ -62,7 +61,7 @@ export const PaginationField = () => {
         </IconButton>
       </Tooltip>
 
-      <Tooltip title={<p style={{ fontSize: "1rem" }}>Back</p>}>
+      <Tooltip aria-disabled={pageNumber === 1 || isLoading} title={<p style={{ fontSize: "1rem" }}>Back</p>}>
         <IconButton
           disabled={pageNumber === 1 || isLoading}
           onClick={() => {
@@ -88,12 +87,12 @@ export const PaginationField = () => {
           setPageWithDebouncer(setPageWithDebouncerParam, e.target.value);
         }}
       />
-      <Tooltip title={<p style={{ fontSize: "1rem" }}>Forward</p>}>
+      <Tooltip aria-disabled={isLoading} title={<p style={{ fontSize: "1rem" }}>Forward</p>}>
         <IconButton
           onClick={() => {
             nextPageHandler(nextPageHandlerParam, "1");
           }}
-          disabled={pageNumber === 100 || isLoading}
+          disabled={isLoading}
           aria-label="next"
           size="large"
         >
@@ -101,9 +100,9 @@ export const PaginationField = () => {
         </IconButton>
       </Tooltip>
 
-      <Tooltip title={<p style={{ fontSize: "1rem" }}>Forward to 100</p>}>
+      <Tooltip aria-disabled={isLoading} title={<p style={{ fontSize: "1rem" }}>Forward to 100</p>}>
         <IconButton
-          disabled={pageNumber === 100 || isLoading}
+          disabled={isLoading}
           onClick={() => {
             nextPageHandler(nextPageHandlerParam, "100");
           }}
