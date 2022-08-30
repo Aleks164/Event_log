@@ -27,6 +27,5 @@ npm install
 
 3. Запустите проект
 
-```
-npm run start```
+```npm run start```
 
