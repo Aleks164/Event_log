@@ -1,8 +1,7 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { CircularProgress, Grid, Paper } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import { useTypedSelector, useTypedDispatch } from "@/hooks/redux";
-import { SortArrow } from "./SortArrow/SortArrow";
+import { useTypedSelector } from "@/hooks/redux";
 import { defaultData } from "@/utils/defaultData";
 import { tableHeaders } from "@/utils/tableHeaders";
 import { readUserSettings } from "@/utils/readUserSettings";
@@ -10,30 +9,44 @@ import { UserSettingsStateType } from "@/types/types";
 import "./tableStyle.css";
 
 export const TableCustomSpiner = () => {
-  const { currentPage, tableRows, tableHeadersList } = useTypedSelector(
+  const { tableRows, tableHeadersList } = useTypedSelector(
     (state) => state.eventLogStateManager
   );
-  const storageTableHeaders = readUserSettings("tableHeadersList");
-  
-  const lastComposition =
-    (storageTableHeaders as UserSettingsStateType["tableHeadersList"]) ||
-    tableHeadersList;
+  const storageTableHeaders = readUserSettings(
+    "tableHeadersList"
+  ) as UserSettingsStateType["tableHeadersList"];
 
-  const rowNumberCalc = (index: number) =>
-    String((currentPage - 1) * tableRows + index + 1);
+  const lastComposition = storageTableHeaders || tableHeadersList;
+
+  const storageRowsStyle = readUserSettings(
+    "rowsStyleComposition"
+  ) as UserSettingsStateType["rowsStyleComposition"];
+
+  const { rowsStyleComposition } = useTypedSelector(
+    (state) => state.eventLogStateManager
+  );
+
+  const lastRowsStyle = storageRowsStyle || rowsStyleComposition;
 
   return (
     <Paper elevation={3} className="table-wrapper">
       <table
         className="resizeable-table"
         style={{
-          gridTemplateColumns: `repeat(${lastComposition.length}, minmax(150px, 1fr))`,
+          gridTemplateColumns: lastRowsStyle,
         }}
       >
         <thead>
           <tr>
             {tableHeaders.map((text, i) => (
-              <th key={text}  className={lastComposition.includes(text) ? "" : "hideColumn"} style={{ paddingTop: `${i === 0 ? "27px" : ""}` }}>
+              <th
+                key={text}
+                className={lastComposition.includes(text) ? "" : "hideColumn"}
+                style={{
+                  paddingTop: `${i === 0 ? "27px" : "20px"}`,
+                  height: `${i === 0 ? "28px" : "35px"}`,
+                }}
+              >
                 <Grid
                   container
                   direction="row"
@@ -42,7 +55,12 @@ export const TableCustomSpiner = () => {
                   sx={{ minWidth: "max-content" }}
                 >
                   <span>{text}</span>
-                  {i !== 0 && <ArrowDropDownIcon sx={{ color: "blue" }} fontSize="large" />}
+                  {i !== 0 && (
+                    <ArrowDropDownIcon
+                      sx={{ color: "blue", ml: "4px" }}
+                      fontSize="large"
+                    />
+                  )}
                 </Grid>
                 <div style={{ height: "100%" }} className="resize-handle" />
               </th>
@@ -55,41 +73,43 @@ export const TableCustomSpiner = () => {
             overflow: "visible",
           }}
         >
-          {Array(tableRows - 1)
-            .fill("")
-            .map((empty, index) => (
+          {Array(tableRows)
+            .fill("table text")
+            .map((text, index) => (
               <tr key={index}>
-                {defaultData.slice(0, lastComposition.length).map((text, i) => {
-                  if (i === 0) return <td key={i}>{rowNumberCalc(index)}</td>;
-                  if (index === 1)
+                {Array(lastComposition.length)
+                  .fill("")
+                  .map((_, i) => {
+                    if (index === tableRows - 1 && i === 0)
+                      return (
+                        <td style={{ color: "white" }} key={i}>
+                          {text}
+                          <CircularProgress
+                            size={150}
+                            sx={{
+                              position: "absolute",
+                              left: "47%",
+                              top: "37%",
+                            }}
+                          />
+                        </td>
+                      );
                     return (
-                      <td style={{ color: "white" }} key={i}>
-                        {text.deviceId}
+                      <td
+                        style={{ color: "white" }}
+                        key={i}
+                        className={
+                          !lastComposition.includes(tableHeaders[i])
+                            ? "hideColumn"
+                            : ""
+                        }
+                      >
+                        {text}
                       </td>
                     );
-                  return (
-                    <td style={{ color: "white" }} key={i}>
-                      {empty}
-                    </td>
-                  );
-                })}
+                  })}
               </tr>
-            ))
-            .concat([
-              <tr key={"CircularProgress"}>
-                <td>
-                  {rowNumberCalc(tableRows - 1)}
-                  <CircularProgress
-                    size={150}
-                    sx={{
-                      position: "absolute",
-                      left: "47%",
-                      top: "37%",
-                    }}
-                  />
-                </td>
-              </tr>,
-            ])}
+            ))}
         </tbody>
       </table>
     </Paper>

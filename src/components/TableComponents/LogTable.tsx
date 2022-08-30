@@ -4,10 +4,16 @@ import { useTypedSelector } from "@/hooks/redux";
 import { defaultData } from "@/utils/defaultData";
 import { tableHeaders } from "@/utils/tableHeaders";
 import { SortArrow } from "./SortArrow/SortArrow";
-import { DataKeysType, UserSettingsStateType } from "@/types/types";
+import {
+  DataKeysType,
+  SortParamStorageType,
+  TableHeadersListStorageType,
+  UserSettingsStateType,
+} from "@/types/types";
 import { readUserSettings } from "@/utils/readUserSettings";
 import { firstLoadingSort } from "@/utils/firstLoadingSort";
 import { saveUserSettings } from "@/utils/saveUserSettings";
+import { keyOfDataItem } from "@/utils/keyOfDataItem";
 import "./tableStyle.css";
 
 const createHeaders = (headers: string[]) =>
@@ -21,35 +27,50 @@ export const LogTable = () => {
   const [choosedLog, setChoosedLog] = useState<number | null>(null);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const tableElement = useRef(null);
-  const keyOfDataItem = Object.keys(defaultData[0]);
-  const storageTableHeaders = readUserSettings("tableHeadersList");
 
-  const { data, serverDataLength } = useTypedSelector((state) => state.dataManager);
-  
+  const storageTableHeaders = readUserSettings(
+    "tableHeadersList"
+  ) as UserSettingsStateType["tableHeadersList"];
+
+  const storageSortParam = readUserSettings(
+    "sortParam"
+  ) as SortParamStorageType;
+
+  const storageRowsStyle = readUserSettings(
+    "rowsStyleComposition"
+  ) as UserSettingsStateType["rowsStyleComposition"];
+
+  const { data, serverDataLength } = useTypedSelector(
+    (state) => state.dataManager
+  );
+
   const { curItem, type } = useTypedSelector((state) => state.sortManager);
-  
-  const storageSortParam = readUserSettings("sortParam");
-  
-  const lastSortParam = (storageSortParam as SortParamStorageType) || {
+
+  const {
+    currentPage,
+    tableRows,
+    rowsStyleComposition,
+    tableHeadersList,
+    minColumnWidth,
+  } = useTypedSelector((state) => state.eventLogStateManager);
+
+  const lastSortParam = storageSortParam || {
     curItem,
     type,
   };
-  
-  const lastData = storageSortParam? firstLoadingSort({ curItem:storageSortParam.curItem, type:storageSortParam.type, data }) : data;
-  
-  const { currentPage, tableRows,rowsStyleComposition, tableHeadersList, minColumnWidth } =
-    useTypedSelector((state) => state.eventLogStateManager);
-    
-    const storageRowsStyle = readUserSettings("rowsStyleComposition");
-    
-    const lastRowsStyle =
-    (storageRowsStyle as UserSettingsStateType["rowsStyleComposition"]) ||
-    rowsStyleComposition;    
-      console.log("lastRowsStyle",lastRowsStyle,storageRowsStyle);
-  const lastComposition =
-    (storageTableHeaders as UserSettingsStateType["tableHeadersList"]) ||
-    tableHeadersList;
-    
+
+  const lastData = storageSortParam
+    ? firstLoadingSort({
+        curItem: storageSortParam.curItem,
+        type: storageSortParam.type,
+        data,
+      })
+    : data;
+
+  const lastRowsStyle = storageRowsStyle || rowsStyleComposition;
+
+  const lastComposition = storageTableHeaders || tableHeadersList;
+
   const columnsHeaders = createHeaders(tableHeaders);
 
   const rowNumberCalc = (index: number) =>
@@ -58,14 +79,14 @@ export const LogTable = () => {
   const mouseDown = (index: number) => {
     setActiveIndex(index);
   };
-  
-  const sortParams = {    
+
+  const sortParams = {
     curItem: lastSortParam.curItem,
     type: lastSortParam.type,
-    data:lastData,
+    data: lastData,
     currentPage,
     tableRows,
-    serverDataLength
+    serverDataLength,
   };
 
   const mouseMove = useCallback(
@@ -99,8 +120,11 @@ export const LogTable = () => {
 
   const mouseUp = useCallback(() => {
     setActiveIndex(null);
-    removeListeners();    
-    saveUserSettings(tableElement.current.style.gridTemplateColumns, "rowsStyleComposition");    
+    removeListeners();
+    saveUserSettings(
+      tableElement.current.style.gridTemplateColumns,
+      "rowsStyleComposition"
+    );
   }, [setActiveIndex, removeListeners]);
 
   const calcStringClass = (deviceType: string, index: number, i: number) => {
@@ -116,36 +140,28 @@ export const LogTable = () => {
   useEffect(() => {
     setTableHeight(tableElement?.current?.offsetHeight);
   }, []);
-  
+
   useEffect(() => {
-      const curentStyle = tableElement.current.style.gridTemplateColumns.split(" ");
-  let resultStyle = "";
-  
-  if(curentStyle.length> lastComposition.length){
-    curentStyle.forEach((el,index)=> {
-      if(lastComposition.includes(columnsHeaders[index])) resultStyle += el;      
-  })
-  }
-  if(curentStyle.length< lastComposition){
-    resultStyle = curentStyle.concat("minmax(150px, 1fr)").join(" ");         
-  }
-    
-  tableElement.current.style.gridTemplateColumns = resultStyle;
-        
+    const gridColumns = columnsHeaders.map(
+      (col) => `${col.ref.current.offsetWidth}px`
+    );
+
+    tableElement.current.style.gridTemplateColumns = `${gridColumns
+      .filter((column) => column !== "0px")
+      .join(" ")}`;
   }, [lastComposition]);
 
   useEffect(() => {
     if (activeIndex !== null) {
       window.addEventListener("mousemove", mouseMove);
       window.addEventListener("mouseup", mouseUp);
-      window.getSelection()?.removeAllRanges(); 
+      window.getSelection()?.removeAllRanges();
     }
     return () => {
       removeListeners();
-    };  
-  }, [activeIndex, mouseMove, mouseUp, removeListeners]);  
-   
-   console.log(lastRowsStyle);
+    };
+  }, [activeIndex, mouseMove, mouseUp, removeListeners]);
+
   return (
     <Paper elevation={3} className="table-wrapper">
       <table
@@ -172,7 +188,11 @@ export const LogTable = () => {
                   sx={{ minWidth: "max-content" }}
                 >
                   <span>{text}</span>
-                  {i !== 0 && <SortArrow sortArrowParam={{...sortParams,fieldIndex:i}} />}
+                  {i !== 0 && (
+                    <SortArrow
+                      sortArrowParam={{ ...sortParams, fieldIndex: i }}
+                    />
+                  )}
                 </Grid>
                 <div
                   style={{ height: tableHeight }}

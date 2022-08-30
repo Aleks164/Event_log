@@ -31,13 +31,21 @@ export type EventLogStateManagerType = {
     tableRows: number;
     minColumnWidth: number;
     tableHeadersList: string[];
-    rowsStyleComposition:string;
+    rowsStyleComposition: string;
     isLoading: boolean;
     error: string;
 }
 
 export type SortArrowType = {
-    fieldIndex: number;
+    sortArrowParam: {
+        curItem: keyof DataItemType;
+        type: FilterIconType;
+        data: DataItemType[];
+        currentPage: number;
+        tableRows: number;
+        serverDataLength: number;
+        fieldIndex: number;
+    }
 }
 export type SortingFieldParam = {
     keyOfDataItem: string[];
@@ -51,14 +59,10 @@ export type SortingFieldParam = {
     serverDataLength: number;
 }
 
-export type FirstLoadingSortParamType = {   
+export type FirstLoadingSortParamType = {
     curItem: keyof DataItemType;
     type: FilterIconType;
-    data: DataItemType[];     
-}
-
-export interface MyEventTarget extends EventTarget {
-    defaultValue: string;
+    data: DataItemType[];
 }
 
 export type VisionSwitcherParamType = {
@@ -94,13 +98,14 @@ export type TooltipButtonParamType = {
     tooltipTitle: string; onClick: () => void; disabled: boolean; ArrowIcon: typeof KeyboardDoubleArrowLeftIcon
 }
 
-export type UserSettingsKeysType = "currentPage" | "tableHeadersList"| "rowsStyleComposition" | "sortParam";
+export type UserSettingsKeysType = "currentPage" | "tableHeadersList" | "rowsStyleComposition" | "sortParam";
 
 export type SortParamStorageType = {
     type: FilterIconType;
     curItem: DataKeysType;
 } | null
 
-export type LocalStorageItemsType = UserSettingsStateType["currentPage" |"rowsStyleComposition"| "tableHeadersList"] | SortParamStorageType
+
+export type LocalStorageItemsType = UserSettingsStateType["currentPage" | "rowsStyleComposition" | "tableHeadersList"] | SortParamStorageType
 
 

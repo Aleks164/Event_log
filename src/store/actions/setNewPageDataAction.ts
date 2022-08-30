@@ -13,9 +13,9 @@ export const setNewPageDataAction =
     async (dispatch: AppDispatch) => {
       try {
         const nextPageNumber = calcPageNumber(pageNumber, rowsNumber, serverDataLength); // добавлено только для того чтобы не генерировать json на 1млн+ строк, при получении данных с реального сервера этой строки не будет
-        // const response = await fetch(`http://localhost:3001/data?_page=${nextPageNumber}&_limit=${rowsNumber}`);
-        const response = await fetch(`https://k3vjv5-3001.preview.csb.app/data?_page=${nextPageNumber}&_limit=${rowsNumber}`);
-        const result = (await response.json()) as DataItemType[];        
+        const response = await fetch(`http://localhost:3001/data?_page=${nextPageNumber}&_limit=${rowsNumber}`);
+        // const response = await fetch(`https://k3vjv5-3001.preview.csb.app/data?_page=${nextPageNumber}&_limit=${rowsNumber}`);
+        const result = (await response.json()) as DataItemType[];
         dispatch(setData(result));
         dispatch(setCurrentPage(pageNumber));
       } catch {

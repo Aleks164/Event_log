@@ -13,13 +13,14 @@ import { UserSettingsStateType } from "@/types/types";
 export const FieldSwicherDropMenu = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const dispatch = useTypedDispatch();
-  const storageTableHeaders = readUserSettings("tableHeadersList");
+  const storageTableHeaders = readUserSettings(
+    "tableHeadersList"
+  ) as UserSettingsStateType["tableHeadersList"];
   const { tableHeadersList } = useTypedSelector(
     (state) => state.eventLogStateManager
   );
-  const lastComposition =
-    (storageTableHeaders as UserSettingsStateType["tableHeadersList"]) ||
-    tableHeadersList;
+  const lastComposition = storageTableHeaders || tableHeadersList;
+
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -88,7 +89,7 @@ export const FieldSwicherDropMenu = () => {
               control={<Switch checked={lastComposition.includes(header)} />}
               label={header}
               value={header}
-              onChange={(e) => visionSwitcher(e, visionSwitcherParam)}
+              onChange={() => visionSwitcher(visionSwitcherParam, header)}
             />
           ))}
         </FormGroup>
