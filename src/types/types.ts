@@ -38,7 +38,6 @@ export type EventLogStateManagerType = {
 export type SortArrowType = {
     fieldIndex: number;
 }
-
 export type SortingFieldParam = {
     keyOfDataItem: string[];
     fieldIndex: number;
@@ -49,6 +48,12 @@ export type SortingFieldParam = {
     currentPage: number;
     tableRows: number;
     serverDataLength: number;
+}
+
+export type FirstLoadingSortParamType = {   
+    curItem: keyof DataItemType;
+    type: FilterIconType;
+    data: DataItemType[];     
 }
 
 export interface MyEventTarget extends EventTarget {
@@ -96,3 +101,5 @@ export type SortParamStorageType = {
 } | null
 
 export type LocalStorageItemsType = UserSettingsStateType["currentPage" | "tableHeadersList"] | SortParamStorageType
+
+

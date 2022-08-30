@@ -5,15 +5,12 @@ import { setSortType, setCurItem } from "@/store/reducers/sortManager";
 import { FilterIconType, DataKeysType, SortingFieldParam } from "@/types/types";
 import { saveUserSettings } from "@/utils/saveUserSettings";
 
-
-
 export function sortingField({ keyOfDataItem, fieldIndex, curItem, type, dispatch, data, currentPage, tableRows, serverDataLength }: SortingFieldParam) {
 
     let nextType: FilterIconType = "down";
     const sortField = keyOfDataItem[fieldIndex - 1] as DataKeysType;
     if (sortField !== curItem) {
-        type = "down";
-        dispatch(setSortType(nextType));
+        type = "down";       
     }
     if (type === "down") {
         nextType = "up";

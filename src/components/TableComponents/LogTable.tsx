@@ -6,6 +6,7 @@ import { tableHeaders } from "@/utils/tableHeaders";
 import { SortArrow } from "./SortArrow/SortArrow";
 import { DataKeysType, UserSettingsStateType } from "@/types/types";
 import { readUserSettings } from "@/utils/readUserSettings";
+import { firstLoadingSort } from "@/utils/firstLoadingSort";
 import "./tableStyle.css";
 
 const createHeaders = (headers: string[]) =>
@@ -22,12 +23,26 @@ export const LogTable = () => {
   const keyOfDataItem = Object.keys(defaultData[0]);
   const storageTableHeaders = readUserSettings("tableHeadersList");
 
-  const { data } = useTypedSelector((state) => state.dataManager);
+  const { data, serverDataLength } = useTypedSelector((state) => state.dataManager);
+  
+  const { curItem, type } = useTypedSelector((state) => state.sortManager);
+  
+  const storageSortParam = readUserSettings("sortParam");
+  
+  const lastSortParam = (storageSortParam as SortParamStorageType) || {
+    curItem,
+    type,
+  };
+  
+  const lastData = storageSortParam? firstLoadingSort({ curItem:storageSortParam.curItem, type:storageSortParam.type, data }) : data;
+  
   const { currentPage, tableRows, tableHeadersList, minColumnWidth } =
     useTypedSelector((state) => state.eventLogStateManager);
+      
   const lastComposition =
     (storageTableHeaders as UserSettingsStateType["tableHeadersList"]) ||
     tableHeadersList;
+    
   const columnsHeaders = createHeaders(tableHeaders);
 
   const rowNumberCalc = (index: number) =>
@@ -35,6 +50,15 @@ export const LogTable = () => {
 
   const mouseDown = (index: number) => {
     setActiveIndex(index);
+  };
+  
+  const filterParams = {    
+    curItem: lastSortParam.curItem,
+    type: lastSortParam.type,
+    data:lastData,
+    currentPage,
+    tableRows,
+    serverDataLength
   };
 
   const mouseMove = useCallback(
@@ -89,13 +113,14 @@ export const LogTable = () => {
     if (activeIndex !== null) {
       window.addEventListener("mousemove", mouseMove);
       window.addEventListener("mouseup", mouseUp);
-      window.getSelection()?.removeAllRanges(); // need to test at chrome, mozila is ok
+      window.getSelection()?.removeAllRanges(); 
     }
 
     return () => {
       removeListeners();
-    };
-  }, [activeIndex, mouseMove, mouseUp, removeListeners]);
+    };  
+  }, [activeIndex, mouseMove, mouseUp, removeListeners]);  
+   
   return (
     <Paper elevation={3} className="table-wrapper">
       <table
@@ -122,7 +147,7 @@ export const LogTable = () => {
                   sx={{ minWidth: "max-content" }}
                 >
                   <span>{text}</span>
-                  {i !== 0 && <SortArrow fieldIndex={i} />}
+                  {i !== 0 && <SortArrow sortArrowParam={{...filterParams,fieldIndex:i}} />}
                 </Grid>
                 <div
                   style={{ height: tableHeight }}
@@ -136,7 +161,7 @@ export const LogTable = () => {
           </tr>
         </thead>
         <tbody>
-          {data.map((item, index) => (
+          {lastData.map((item, index) => (
             <tr
               key={index}
               onClick={() => {

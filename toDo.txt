@@ -29,3 +29,5 @@
 - storage switcher problem
 
 - fix useEfect problem with sort Storage
+
+- name of variables

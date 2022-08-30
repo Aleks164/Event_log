@@ -1,8 +1,10 @@
 import React, { useEffect } from "react";
 import { CircularProgress, Grid, Paper } from "@mui/material";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { useTypedSelector, useTypedDispatch } from "@/hooks/redux";
 import { SortArrow } from "./SortArrow/SortArrow";
 import { defaultData } from "@/utils/defaultData";
+import { tableHeaders } from "@/utils/tableHeaders";
 import { readUserSettings } from "@/utils/readUserSettings";
 import { UserSettingsStateType } from "@/types/types";
 import "./tableStyle.css";
@@ -12,6 +14,7 @@ export const TableCustomSpiner = () => {
     (state) => state.eventLogStateManager
   );
   const storageTableHeaders = readUserSettings("tableHeadersList");
+  
   const lastComposition =
     (storageTableHeaders as UserSettingsStateType["tableHeadersList"]) ||
     tableHeadersList;
@@ -29,8 +32,8 @@ export const TableCustomSpiner = () => {
       >
         <thead>
           <tr>
-            {lastComposition.map((text, i) => (
-              <th key={text} style={{ paddingTop: `${i === 0 ? "27px" : ""}` }}>
+            {tableHeaders.map((text, i) => (
+              <th key={text}  className={lastComposition.includes(text) ? "" : "hideColumn"} style={{ paddingTop: `${i === 0 ? "27px" : ""}` }}>
                 <Grid
                   container
                   direction="row"
@@ -39,7 +42,7 @@ export const TableCustomSpiner = () => {
                   sx={{ minWidth: "max-content" }}
                 >
                   <span>{text}</span>
-                  {i !== 0 && <SortArrow fieldIndex={i} />}
+                  {i !== 0 && <ArrowDropDownIcon sx={{ color: "blue" }} fontSize="large" />}
                 </Grid>
                 <div style={{ height: "100%" }} className="resize-handle" />
               </th>
