@@ -2,7 +2,6 @@ import React from "react";
 import { CircularProgress, Grid, Paper } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { useTypedSelector } from "@/hooks/redux";
-import { defaultData } from "@/utils/defaultData";
 import { tableHeaders } from "@/utils/tableHeaders";
 import { readUserSettings } from "@/utils/readUserSettings";
 import { UserSettingsStateType } from "@/types/types";

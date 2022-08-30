@@ -7,7 +7,7 @@ const initialState: EventLogStateManagerType = {
   minColumnWidth: 150,
   tableHeadersList: tableHeaders,
   currentPage: 1,
-  rowsStyleComposition: "repeat(8, 1fr)",
+  rowsStyleComposition: "repeat(8, minmax(150px, 1fr))",
   isLoading: true,
   error: "",
 };

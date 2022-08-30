@@ -1,20 +1,14 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { IconButton, Grid } from "@mui/material";
-import {
-  DataKeysType,
-  SortArrowType,
-  SortParamStorageType,
-} from "@/types/types";
-import { useTypedSelector, useTypedDispatch } from "@/hooks/redux";
-import { defaultData } from "@/utils/defaultData";
+import { DataKeysType, SortArrowType } from "@/types/types";
+import { useTypedDispatch } from "@/hooks/redux";
 import { curFilterIcon } from "./curFilterIcon";
 import { sortingField } from "./sortingField";
-import { readUserSettings } from "@/utils/readUserSettings";
 import { keyOfDataItem } from "@/utils/keyOfDataItem";
 
 export const SortArrow = ({ sortArrowParam }: SortArrowType) => {
   const dispatch = useTypedDispatch();
-  
+
   return (
     <Grid
       item
@@ -25,7 +19,9 @@ export const SortArrow = ({ sortArrowParam }: SortArrowType) => {
       sx={{ width: "min-content" }}
     >
       <IconButton
-        onClick={() => sortingField({...sortArrowParam,keyOfDataItem,dispatch })}
+        onClick={() =>
+          sortingField({ ...sortArrowParam, keyOfDataItem, dispatch })
+        }
         aria-label="Sort"
         size="small"
       >

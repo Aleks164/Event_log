@@ -1,32 +1,31 @@
-import React, { useState, useCallback, useEffect, useRef } from "react";
+import React, {
+  useState,
+  useCallback,
+  useEffect,
+  useRef,
+  MutableRefObject,
+} from "react";
 import { Grid, Paper } from "@mui/material";
 import { useTypedSelector } from "@/hooks/redux";
-import { defaultData } from "@/utils/defaultData";
 import { tableHeaders } from "@/utils/tableHeaders";
-import { SortArrow } from "./SortArrow/SortArrow";
-import {
-  DataKeysType,
-  SortParamStorageType,
-  TableHeadersListStorageType,
-  UserSettingsStateType,
-} from "@/types/types";
+import { SortArrow } from "../SortArrow/SortArrow";
 import { readUserSettings } from "@/utils/readUserSettings";
 import { firstLoadingSort } from "@/utils/firstLoadingSort";
 import { saveUserSettings } from "@/utils/saveUserSettings";
 import { keyOfDataItem } from "@/utils/keyOfDataItem";
-import "./tableStyle.css";
-
-const createHeaders = (headers: string[]) =>
-  headers.map((item) => ({
-    text: item,
-    ref: useRef(),
-  }));
+import {
+  DataKeysType,
+  SortParamStorageType,
+  UserSettingsStateType,
+} from "@/types/types";
+import "../tableStyle.css";
+import { createHeaders } from "./createHeaders";
 
 export const LogTable = () => {
-  const [tableHeight, setTableHeight] = useState("auto");
+  const [tableHeight, setTableHeight] = useState<string | number>("auto");
   const [choosedLog, setChoosedLog] = useState<number | null>(null);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const tableElement = useRef(null);
+  const tableElement = useRef() as MutableRefObject<HTMLTableElement>;
 
   const storageTableHeaders = readUserSettings(
     "tableHeadersList"
@@ -90,25 +89,21 @@ export const LogTable = () => {
   };
 
   const mouseMove = useCallback(
-    (e) => {
+    (e: { clientX: number }) => {
       const gridColumns = columnsHeaders.map((col, i) => {
         if (i === activeIndex) {
-          // Calculate the column width
           const width = e.clientX - col.ref.current.offsetLeft;
 
           if (width >= minColumnWidth) {
             return `${width}px`;
           }
         }
-
-        // Otherwise return the previous width (no changes)
         return `${col.ref.current.offsetWidth}px`;
       });
-
-      // Assign the px values to the table
-      tableElement.current.style.gridTemplateColumns = `${gridColumns
-        .filter((column) => column !== "0px")
-        .join(" ")}`;
+      if (tableElement !== undefined)
+        tableElement.current.style.gridTemplateColumns = `${gridColumns
+          .filter((column) => column !== "0px")
+          .join(" ")}`;
     },
     [activeIndex, columnsHeaders, minColumnWidth]
   );
@@ -127,9 +122,9 @@ export const LogTable = () => {
     );
   }, [setActiveIndex, removeListeners]);
 
-  const calcStringClass = (deviceType: string, index: number, i: number) => {
-    if (!lastComposition.includes(tableHeaders[i])) return "hideColumn";
-    if (index !== null && choosedLog === index) return "choosedLog";
+  const calcStringClass = (deviceType: string, row: number, column: number) => {
+    if (!lastComposition.includes(tableHeaders[column])) return "hideColumn";
+    if (row !== null && choosedLog === row) return "choosedLog";
     let resultClass = "type1Color";
     if (deviceType !== "Type1")
       resultClass = `${deviceType.toLowerCase()}Color`;
@@ -138,7 +133,7 @@ export const LogTable = () => {
   };
 
   useEffect(() => {
-    setTableHeight(tableElement?.current?.offsetHeight);
+    setTableHeight(tableElement.current.offsetHeight);
   }, []);
 
   useEffect(() => {
@@ -149,6 +144,12 @@ export const LogTable = () => {
     tableElement.current.style.gridTemplateColumns = `${gridColumns
       .filter((column) => column !== "0px")
       .join(" ")}`;
+    console.log("123");
+
+    saveUserSettings(
+      tableElement.current.style.gridTemplateColumns,
+      "rowsStyleComposition"
+    );
   }, [lastComposition]);
 
   useEffect(() => {
@@ -206,39 +207,39 @@ export const LogTable = () => {
           </tr>
         </thead>
         <tbody>
-          {lastData.map((item, index) => (
+          {lastData.map((item, row) => (
             <tr
-              key={index}
+              key={row}
               onClick={() => {
-                if (choosedLog === index) setChoosedLog(null);
-                else setChoosedLog(index);
+                if (choosedLog === row) setChoosedLog(null);
+                else setChoosedLog(row);
               }}
             >
-              {tableHeaders.map((header, i) => {
-                if (i === 0)
+              {tableHeaders.map((header, column) => {
+                if (column === 0)
                   return (
                     <td
-                      key={i}
-                      className={calcStringClass(item.deviceType, index, i)}
+                      key={column}
+                      className={calcStringClass(item.deviceType, row, column)}
                     >
-                      {rowNumberCalc(index)}
+                      {rowNumberCalc(row)}
                     </td>
                   );
                 if (header === "Состояние")
                   return (
                     <td
-                      key={i}
-                      className={calcStringClass(item.deviceType, index, i)}
+                      key={column}
+                      className={calcStringClass(item.deviceType, row, column)}
                     >
                       {item.isActive ? "On" : "Off"}
                     </td>
                   );
                 return (
                   <td
-                    key={i}
-                    className={calcStringClass(item.deviceType, index, i)}
+                    key={column}
+                    className={calcStringClass(item.deviceType, row, column)}
                   >
-                    {item[keyOfDataItem[i - 1] as DataKeysType]}
+                    {item[keyOfDataItem[column - 1] as DataKeysType]}
                   </td>
                 );
               })}

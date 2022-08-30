@@ -8,9 +8,7 @@
 
 table {
   width: 100%;
-  /* overflow-x: hidden; */
   display: grid;
-  /* grid-template-columns: repeat(8, minmax(150px, 1fr)); */
 }
 
 table thead,
@@ -39,10 +37,6 @@ table tbody td {
   display: block;
   user-select: none;
 }
-
-/* table th div:first-child {
-  overflow: hidden;
-} */
 
 table tr td {
   border-top: 1px solid #ccc;
