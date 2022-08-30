@@ -22,14 +22,16 @@ export const EventLog = () => {
   const { tableRows, isLoading } = useTypedSelector(
     (state) => state.eventLogStateManager
   );
+   const { curItem, type } = useTypedSelector((state) => state.sortManager);
   const { serverDataLength } = useTypedSelector((state) => state.dataManager);
   const dispatch = useTypedDispatch();
 
-  useLayoutEffect(() => {
+  useLayoutEffect(() => {       
     const storagePage = readUserSettings("currentPage");
     const lastPage = (storagePage as UserSettingsStateType["currentPage"]) || 1;
-
-    dispatch(setIsLoading(true));
+    
+    
+    
     dispatch(setFullDataLength());
     dispatch(setNewPageDataAction(lastPage, tableRows, serverDataLength));
     setTimeout(() => {

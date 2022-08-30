@@ -10,39 +10,11 @@ import { defaultData } from "@/utils/defaultData";
 import { curFilterIcon } from "./curFilterIcon";
 import { sortingField } from "./sortingField";
 import { readUserSettings } from "@/utils/readUserSettings";
+import { keyOfDataItem } from "@/utils/keyOfDataItem";
 
-export const SortArrow = ({ fieldIndex }: SortArrowType) => {
-  const { data, serverDataLength } = useTypedSelector(
-    (state) => state.dataManager
-  );
-  const { curItem, type } = useTypedSelector((state) => state.sortManager);
-  const { currentPage, tableRows } = useTypedSelector(
-    (state) => state.eventLogStateManager
-  );
-  const storageSortParam = readUserSettings("sortParam");
-  const lastSortParam = (storageSortParam as SortParamStorageType) || {
-    curItem,
-    type,
-  };
-
+export const SortArrow = ({ sortArrowParam }: SortArrowType) => {
   const dispatch = useTypedDispatch();
-  const keyOfDataItem = Object.keys(defaultData[0]);
-  const filterParams = {
-    keyOfDataItem,
-    fieldIndex,
-    curItem: lastSortParam.curItem,
-    type: lastSortParam.type,
-    dispatch,
-    data,
-    currentPage,
-    tableRows,
-    serverDataLength,
-  };
-
-  // useEffect(() => {
-  //   if (lastSortParam.type !== "default") sortingField(filterParams);
-  // }, []);
-
+  
   return (
     <Grid
       item
@@ -53,14 +25,14 @@ export const SortArrow = ({ fieldIndex }: SortArrowType) => {
       sx={{ width: "min-content" }}
     >
       <IconButton
-        onClick={() => sortingField(filterParams)}
+        onClick={() => sortingField({...sortArrowParam,keyOfDataItem,dispatch })}
         aria-label="Sort"
         size="small"
       >
         {curFilterIcon(
-          lastSortParam.type,
-          lastSortParam.curItem ===
-            (keyOfDataItem[fieldIndex - 1] as DataKeysType)
+          sortArrowParam.type,
+          sortArrowParam.curItem ===
+            (keyOfDataItem[sortArrowParam.fieldIndex - 1] as DataKeysType)
         )}
       </IconButton>
     </Grid>

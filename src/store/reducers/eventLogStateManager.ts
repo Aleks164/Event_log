@@ -7,7 +7,7 @@ const initialState: EventLogStateManagerType = {
   minColumnWidth: 150,
   tableHeadersList: tableHeaders,
   currentPage: 1,
-  isLoading: false,
+  isLoading: true,
   error: "",
 };
 
