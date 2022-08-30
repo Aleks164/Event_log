@@ -31,6 +31,7 @@ export type EventLogStateManagerType = {
     tableRows: number;
     minColumnWidth: number;
     tableHeadersList: string[];
+    rowsStyleComposition:string;
     isLoading: boolean;
     error: string;
 }
@@ -83,7 +84,7 @@ export type NextPageHandlerParamType = {
 
 export type UserSettingsStateType = {
     currentPage: number;
-    tableRowsStyle: string;
+    rowsStyleComposition: string;
     type: FilterIconType;
     curItem: DataKeysType;
     tableHeadersList: string[];
@@ -93,13 +94,13 @@ export type TooltipButtonParamType = {
     tooltipTitle: string; onClick: () => void; disabled: boolean; ArrowIcon: typeof KeyboardDoubleArrowLeftIcon
 }
 
-export type UserSettingsKeysType = "currentPage" | "tableHeadersList" | "sortParam";
+export type UserSettingsKeysType = "currentPage" | "tableHeadersList"| "rowsStyleComposition" | "sortParam";
 
 export type SortParamStorageType = {
     type: FilterIconType;
     curItem: DataKeysType;
 } | null
 
-export type LocalStorageItemsType = UserSettingsStateType["currentPage" | "tableHeadersList"] | SortParamStorageType
+export type LocalStorageItemsType = UserSettingsStateType["currentPage" |"rowsStyleComposition"| "tableHeadersList"] | SortParamStorageType
 
 

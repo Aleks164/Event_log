@@ -7,6 +7,7 @@ import { SortArrow } from "./SortArrow/SortArrow";
 import { DataKeysType, UserSettingsStateType } from "@/types/types";
 import { readUserSettings } from "@/utils/readUserSettings";
 import { firstLoadingSort } from "@/utils/firstLoadingSort";
+import { saveUserSettings } from "@/utils/saveUserSettings";
 import "./tableStyle.css";
 
 const createHeaders = (headers: string[]) =>
@@ -36,9 +37,15 @@ export const LogTable = () => {
   
   const lastData = storageSortParam? firstLoadingSort({ curItem:storageSortParam.curItem, type:storageSortParam.type, data }) : data;
   
-  const { currentPage, tableRows, tableHeadersList, minColumnWidth } =
+  const { currentPage, tableRows,rowsStyleComposition, tableHeadersList, minColumnWidth } =
     useTypedSelector((state) => state.eventLogStateManager);
-      
+    
+    const storageRowsStyle = readUserSettings("rowsStyleComposition");
+    
+    const lastRowsStyle =
+    (storageRowsStyle as UserSettingsStateType["rowsStyleComposition"]) ||
+    rowsStyleComposition;    
+      console.log("lastRowsStyle",lastRowsStyle,storageRowsStyle);
   const lastComposition =
     (storageTableHeaders as UserSettingsStateType["tableHeadersList"]) ||
     tableHeadersList;
@@ -52,7 +59,7 @@ export const LogTable = () => {
     setActiveIndex(index);
   };
   
-  const filterParams = {    
+  const sortParams = {    
     curItem: lastSortParam.curItem,
     type: lastSortParam.type,
     data:lastData,
@@ -92,7 +99,8 @@ export const LogTable = () => {
 
   const mouseUp = useCallback(() => {
     setActiveIndex(null);
-    removeListeners();
+    removeListeners();    
+    saveUserSettings(tableElement.current.style.gridTemplateColumns, "rowsStyleComposition");    
   }, [setActiveIndex, removeListeners]);
 
   const calcStringClass = (deviceType: string, index: number, i: number) => {
@@ -108,6 +116,23 @@ export const LogTable = () => {
   useEffect(() => {
     setTableHeight(tableElement?.current?.offsetHeight);
   }, []);
+  
+  useEffect(() => {
+      const curentStyle = tableElement.current.style.gridTemplateColumns.split(" ");
+  let resultStyle = "";
+  
+  if(curentStyle.length> lastComposition.length){
+    curentStyle.forEach((el,index)=> {
+      if(lastComposition.includes(columnsHeaders[index])) resultStyle += el;      
+  })
+  }
+  if(curentStyle.length< lastComposition){
+    resultStyle = curentStyle.concat("minmax(150px, 1fr)").join(" ");         
+  }
+    
+  tableElement.current.style.gridTemplateColumns = resultStyle;
+        
+  }, [lastComposition]);
 
   useEffect(() => {
     if (activeIndex !== null) {
@@ -115,18 +140,18 @@ export const LogTable = () => {
       window.addEventListener("mouseup", mouseUp);
       window.getSelection()?.removeAllRanges(); 
     }
-
     return () => {
       removeListeners();
     };  
   }, [activeIndex, mouseMove, mouseUp, removeListeners]);  
    
+   console.log(lastRowsStyle);
   return (
     <Paper elevation={3} className="table-wrapper">
       <table
         className="resizeable-table"
         style={{
-          gridTemplateColumns: `repeat(${lastComposition.length}, minmax(150px, 1fr))`,
+          gridTemplateColumns: lastRowsStyle,
         }}
         ref={tableElement}
       >
@@ -147,7 +172,7 @@ export const LogTable = () => {
                   sx={{ minWidth: "max-content" }}
                 >
                   <span>{text}</span>
-                  {i !== 0 && <SortArrow sortArrowParam={{...filterParams,fieldIndex:i}} />}
+                  {i !== 0 && <SortArrow sortArrowParam={{...sortParams,fieldIndex:i}} />}
                 </Grid>
                 <div
                   style={{ height: tableHeight }}

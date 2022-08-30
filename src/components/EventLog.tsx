@@ -1,4 +1,4 @@
-import React, { useLayoutEffect } from "react";
+import React, { useLayoutEffect,useEffect } from "react";
 import { Grid, Paper } from "@mui/material";
 import { PaginationField } from "./TableComponents/PaginationField/PaginationField";
 import { LogTable } from "./TableComponents/LogTable";
@@ -12,7 +12,7 @@ import { setSortType, setCurItem } from "@/store/reducers/sortManager";
 import {
   setIsLoading,
   setCurrentPage,
-  setTableRowsStyle,
+  setRowsStyleComposition,
   setTableHeadersList,
 } from "../store/reducers/eventLogStateManager";
 import { setFullDataLength } from "../store/actions/setFullDataLength";
@@ -23,14 +23,15 @@ export const EventLog = () => {
     (state) => state.eventLogStateManager
   );
    const { curItem, type } = useTypedSelector((state) => state.sortManager);
-  const { serverDataLength } = useTypedSelector((state) => state.dataManager);
+  const { data,serverDataLength } = useTypedSelector((state) => state.dataManager);
   const dispatch = useTypedDispatch();
 
   useLayoutEffect(() => {       
     const storagePage = readUserSettings("currentPage");
     const lastPage = (storagePage as UserSettingsStateType["currentPage"]) || 1;
     
-    
+    const storageRowsStyle = readUserSettings("rowsStyleComposition");
+   storageRowsStyle&&dispatch(setRowsStyleComposition(storageRowsStyle));   
     
     dispatch(setFullDataLength());
     dispatch(setNewPageDataAction(lastPage, tableRows, serverDataLength));
