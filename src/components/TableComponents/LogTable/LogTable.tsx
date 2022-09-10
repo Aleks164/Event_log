@@ -6,6 +6,7 @@ import React, {
   MutableRefObject,
 } from "react";
 import { Grid, Paper } from "@mui/material";
+import { Transition } from "react-transition-group";
 import { useTypedSelector } from "@/hooks/redux";
 import { tableHeaders } from "@/utils/tableHeaders";
 import { SortArrow } from "../SortArrow/SortArrow";
@@ -20,6 +21,21 @@ import {
 } from "@/types/types";
 import "../tableStyle.css";
 import { createHeaders } from "./createHeaders";
+
+const delay = 400;
+
+const defaultStyle = {
+  transition: `all ${delay}ms ease-in-out`,
+  transform: "translateX(0px)",
+};
+
+const transitionStyles = {
+  entering: { transform: "translateX(0px)" },
+  entered: { transform: "translateX(0px)" },
+  exiting: { transform: "translateX(0px)" },
+  exited: { transform: "translateX(300px)" },
+  unmounted: { transform: "translateX(0px)" },
+};
 
 export const LogTable = () => {
   const [tableHeight, setTableHeight] = useState<string | number>("auto");
@@ -144,7 +160,6 @@ export const LogTable = () => {
     tableElement.current.style.gridTemplateColumns = `${gridColumns
       .filter((column) => column !== "0px")
       .join(" ")}`;
-    console.log("123");
 
     saveUserSettings(
       tableElement.current.style.gridTemplateColumns,
@@ -175,34 +190,44 @@ export const LogTable = () => {
         <thead>
           <tr>
             {columnsHeaders.map(({ ref, text }, i) => (
-              <th
-                ref={ref}
-                key={text}
-                className={lastComposition.includes(text) ? "" : "hideColumn"}
-                style={{ paddingTop: `${i === 0 ? "27px" : ""}` }}
-              >
-                <Grid
-                  container
-                  direction="row"
-                  justifyContent="center"
-                  alignItems="center"
-                  sx={{ minWidth: "max-content" }}
-                >
-                  <span>{text}</span>
-                  {i !== 0 && (
-                    <SortArrow
-                      sortArrowParam={{ ...sortParams, fieldIndex: i }}
+              <Transition in={lastComposition.includes(text)} timeout={delay}>
+                {(state) => (
+                  <th
+                    style={{
+                      ...defaultStyle,
+                      ...transitionStyles[state],
+                      paddingTop: `${i === 0 ? "27px" : ""}`,
+                    }}
+                    ref={ref}
+                    key={text}
+                    className={
+                      lastComposition.includes(text) ? "" : "hideColumn"
+                    }
+                  >
+                    <Grid
+                      container
+                      direction="row"
+                      justifyContent="center"
+                      alignItems="center"
+                      sx={{ minWidth: "max-content" }}
+                    >
+                      <span>{text}</span>
+                      {i !== 0 && (
+                        <SortArrow
+                          sortArrowParam={{ ...sortParams, fieldIndex: i }}
+                        />
+                      )}
+                    </Grid>
+                    <div
+                      style={{ height: tableHeight }}
+                      onMouseDown={() => mouseDown(i)}
+                      className={`resize-handle ${
+                        activeIndex === i ? "active" : ""
+                      }`}
                     />
-                  )}
-                </Grid>
-                <div
-                  style={{ height: tableHeight }}
-                  onMouseDown={() => mouseDown(i)}
-                  className={`resize-handle ${
-                    activeIndex === i ? "active" : ""
-                  }`}
-                />
-              </th>
+                  </th>
+                )}
+              </Transition>
             ))}
           </tr>
         </thead>
@@ -218,29 +243,74 @@ export const LogTable = () => {
               {tableHeaders.map((header, column) => {
                 if (column === 0)
                   return (
-                    <td
-                      key={column}
-                      className={calcStringClass(item.deviceType, row, column)}
+                    <Transition
+                      in={lastComposition.includes(tableHeaders[column])}
+                      timeout={delay}
                     >
-                      {rowNumberCalc(row)}
-                    </td>
+                      {(state) => (
+                        <td
+                          style={{
+                            ...defaultStyle,
+                            ...transitionStyles[state],
+                          }}
+                          key={column}
+                          className={calcStringClass(
+                            item.deviceType,
+                            row,
+                            column
+                          )}
+                        >
+                          {rowNumberCalc(row)}
+                        </td>
+                      )}
+                    </Transition>
                   );
                 if (header === "Состояние")
                   return (
-                    <td
-                      key={column}
-                      className={calcStringClass(item.deviceType, row, column)}
+                    <Transition
+                      in={lastComposition.includes(tableHeaders[column])}
+                      timeout={delay}
                     >
-                      {item.isActive ? "On" : "Off"}
-                    </td>
+                      {(state) => (
+                        <td
+                          style={{
+                            ...defaultStyle,
+                            ...transitionStyles[state],
+                          }}
+                          key={column}
+                          className={calcStringClass(
+                            item.deviceType,
+                            row,
+                            column
+                          )}
+                        >
+                          {item.isActive ? "On" : "Off"}
+                        </td>
+                      )}
+                    </Transition>
                   );
                 return (
-                  <td
-                    key={column}
-                    className={calcStringClass(item.deviceType, row, column)}
+                  <Transition
+                    in={lastComposition.includes(tableHeaders[column])}
+                    timeout={delay}
                   >
-                    {item[keyOfDataItem[column - 1] as DataKeysType]}
-                  </td>
+                    {(state) => (
+                      <td
+                        style={{
+                          ...defaultStyle,
+                          ...transitionStyles[state],
+                        }}
+                        key={column}
+                        className={calcStringClass(
+                          item.deviceType,
+                          row,
+                          column
+                        )}
+                      >
+                        {item[keyOfDataItem[column - 1] as DataKeysType]}
+                      </td>
+                    )}
+                  </Transition>
                 );
               })}
             </tr>
